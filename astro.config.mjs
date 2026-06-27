@@ -2,7 +2,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
-import node from '@astrojs/node';
+import vercel from '@astrojs/vercel';
 import react from '@astrojs/react';
 
 import sanity from '@sanity/astro';
@@ -16,10 +16,8 @@ export default defineConfig({
   // Individual API routes opt-in to SSR with: export const prerender = false;
   output: 'static',
   
-  // Required adapter for SSR routes on Node daemon (cPanel)
-  adapter: node({
-    mode: 'standalone',
-  }),
+  // Required adapter for Vercel deployment
+  adapter: vercel(),
 
   // Vite plugins — Tailwind CSS 4 is a Vite-native plugin
   vite: {
