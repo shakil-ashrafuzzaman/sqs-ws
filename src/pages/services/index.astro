@@ -1,0 +1,215 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import Card from '@components/common/Card.astro';
+import Badge from '@components/common/Badge.astro';
+import Button from '@components/common/Button.astro';
+import { sanityClient } from '@lib/sanity';
+
+// Fetch all services from Sanity CMS, ordered by the custom 'order' field
+const query = `*[_type == "service"] | order(order asc) {
+  title,
+  "slug": slug.current,
+  excerpt,
+  icon
+}`;
+const fetchedServices = await sanityClient.fetch(query).catch(() => []);
+
+const getIconForService = (title: string) => {
+  const t = title.toLowerCase();
+  if (t.includes('guard')) return `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11V7a4 4 0 018 0v4m0 4.711A13.914 13.914 0 0014.828 20M14 21h-4"/></svg>`; 
+  if (t.includes('waking') || t.includes('fire')) return `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>`; 
+  if (t.includes('construction') || t.includes('site')) return `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>`; 
+  if (t.includes('dog') || t.includes('k9')) return `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/></svg>`; 
+  if (t.includes('warehouse') || t.includes('logistic')) return `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>`; 
+  if (t.includes('office') || t.includes('corporate')) return `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>`; 
+  if (t.includes('void') || t.includes('vacant')) return `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>`; 
+  if (t.includes('emergency')) return `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>`; 
+  return `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>`; 
+};
+
+const fallbackServices = [
+  {
+    title: 'Security Guarding',
+    slug: 'security-guarding',
+    excerpt: 'Professional, SIA-licensed security guards to secure your premises, manage access control, and protect assets.',
+    icon: 'shield'
+  },
+  {
+    title: 'Waking Watch',
+    slug: 'waking-watch',
+    excerpt: 'Dedicated fire safety patrols to detect fire hazards, raise alarms, and ensure safe evacuation in residential or commercial buildings.',
+    icon: 'eye'
+  },
+  {
+    title: 'Construction Security',
+    slug: 'construction-security',
+    excerpt: 'Specialized security solutions protecting high-value machinery, equipment, and preventing trespass on active building sites.',
+    icon: 'building'
+  },
+  {
+    title: 'Dog Handler / K9',
+    slug: 'dog-handler-k9',
+    excerpt: 'Highly trained security dog handlers providing a powerful visual deterrent and perimeter protection for high-risk sites.',
+    icon: 'paw-print'
+  },
+  {
+    title: 'Warehouse Security',
+    slug: 'warehouse-security',
+    excerpt: 'Comprehensive protection for inventory, logistics depots, and warehouse facilities to prevent theft and stock shrinkage.',
+    icon: 'archive'
+  },
+  {
+    title: 'Office Security',
+    slug: 'office-security',
+    excerpt: 'Front-of-house concierge, reception guarding, and corporate access control tailormade for modern business premises.',
+    icon: 'briefcase'
+  },
+  {
+    title: 'Void Property',
+    slug: 'void-property',
+    excerpt: 'Vigilant protection and inspections for vacant, unoccupied commercial or residential buildings to prevent squatting and vandalism.',
+    icon: 'home'
+  },
+  {
+    title: 'Emergency Cover',
+    slug: 'emergency-cover',
+    excerpt: 'Rapidly deployed 24/7 emergency security officers for urgent cover, alarm responses, or sudden security breaches.',
+    icon: 'bell'
+  }
+];
+
+const fetchedSlugs = new Set((fetchedServices || []).map((s: any) => s.slug));
+const uniqueFallbackServices = fallbackServices.filter(s => !fetchedSlugs.has(s.slug));
+const services = [...(fetchedServices || []), ...uniqueFallbackServices];
+---
+
+<PageLayout 
+  title="Security Services | SQS Security Southampton & UK Wide"
+  description="Explore our comprehensive range of professional security services including manned guarding, CCTV monitoring, key holding, and mobile patrols across the UK."
+>
+  <!-- Hero Section -->
+  <section class="bg-navy-light py-20 text-white relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#64748b_1px,transparent_1px),linear-gradient(to_bottom,#64748b_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
+    <div class="container relative z-10 text-center max-w-4xl flex flex-col items-center gap-6 animate-fade-in-up">
+      <Badge variant="gold">Professional Protection</Badge>
+      <h1 class="font-display font-black text-4xl md:text-5xl lg:text-6xl">
+        <span class="text-gradient-gold">Our Security Services</span>
+      </h1>
+      <p class="text-lg md:text-xl text-steel-light">
+        Comprehensive, SIA-approved security solutions tailored to mitigate risks and protect your most valuable assets.
+      </p>
+    </div>
+  </section>
+
+  <!-- Filter & Grid Section -->
+  <section class="section bg-light min-h-[50vh]">
+    <div class="container flex flex-col gap-10">
+      
+      <!-- Search/Filter Bar -->
+      <div class="bg-white p-4 rounded-xl shadow-card border border-border flex flex-col sm:flex-row gap-4 items-center justify-between max-w-3xl mx-auto w-full">
+        <div class="relative w-full">
+          <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-steel-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input 
+            type="text" 
+            id="service-search" 
+            placeholder="Search security services (e.g., CCTV, Guards)..." 
+            class="w-full pl-10 pr-4 py-3 rounded-lg bg-light border border-border focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent transition-shadow"
+          />
+        </div>
+      </div>
+
+      <!-- Services Grid -->
+      <div id="services-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {services.map((service) => (
+          <div class="service-card group cursor-pointer" data-title={service.title.toLowerCase()} onclick={`window.location.href='/services/${service.slug}'`}>
+            <div class="flex flex-col h-full bg-white rounded-2xl shadow-lg hover:shadow-[0_20px_40px_rgba(11,31,58,0.08)] transition-all duration-500 border border-border overflow-hidden relative transform hover:-translate-y-2">
+              
+              <!-- Top Accent Line -->
+              <div class="absolute top-0 left-0 w-0 h-1.5 bg-gradient-to-r from-gold to-gold-light group-hover:w-full transition-all duration-500 ease-out"></div>
+              
+              <div class="p-8 flex flex-col h-full gap-5 relative z-10">
+                <!-- Icon with Gradient Background -->
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-navy/5 to-navy/10 text-navy group-hover:from-navy group-hover:to-navy-dark group-hover:text-gold flex items-center justify-center transition-all duration-500 shadow-sm group-hover:shadow-md transform group-hover:scale-110 group-hover:-rotate-3 border border-white/50 group-hover:border-navy-light">
+                  <Fragment set:html={getIconForService(service.title)} />
+                </div>
+                
+                <h2 class="font-display font-black text-[22px] text-navy group-hover:text-gold-dark transition-colors duration-300 leading-tight">
+                  {service.title}
+                </h2>
+                
+                <p class="text-steel-dark flex-grow leading-relaxed">
+                  {service.excerpt}
+                </p>
+                
+                <div class="mt-4 pt-6 border-t border-light flex items-center justify-between">
+                  <span class="inline-flex items-center gap-2 font-bold text-navy group-hover:text-gold transition-colors duration-300 uppercase tracking-widest text-sm">
+                    Explore Service
+                  </span>
+                  <!-- Small decorative arrow element -->
+                  <div class="w-10 h-10 rounded-full bg-light group-hover:bg-gold flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-md">
+                    <svg class="w-5 h-5 text-navy transform group-hover:translate-x-0.5 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- No Results Message -->
+      <div id="no-results" class="hidden text-center py-12 flex-col gap-4 items-center">
+        <svg class="w-12 h-12 text-steel-light mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <h3 class="font-display font-bold text-xl text-navy">No services found</h3>
+        <p class="text-steel-dark">Try adjusting your search terms.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="bg-navy py-16 text-white border-t border-white/10">
+    <div class="container text-center flex flex-col items-center gap-6">
+      <h2 class="font-display font-bold text-3xl">Need a Custom Security Solution?</h2>
+      <p class="text-steel-light max-w-2xl">If you have specific requirements not listed here, our team can design a bespoke security strategy tailored exactly to your premises.</p>
+      <Button href="/contact" variant="primary" size="lg" class="mt-2">Speak to our Experts</Button>
+    </div>
+  </section>
+</PageLayout>
+
+<script>
+  // Client-side search functionality
+  const searchInput = document.getElementById('service-search') as HTMLInputElement;
+  const serviceCards = document.querySelectorAll('.service-card');
+  const noResults = document.getElementById('no-results');
+
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      const term = (e.target as HTMLInputElement).value.toLowerCase();
+      let hasVisibleCards = false;
+
+      serviceCards.forEach((card) => {
+        const title = card.getAttribute('data-title') || '';
+        const excerpt = card.textContent?.toLowerCase() || '';
+        
+        if (title.includes(term) || excerpt.includes(term)) {
+          card.classList.remove('hidden');
+          hasVisibleCards = true;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      if (noResults) {
+        if (!hasVisibleCards) {
+          noResults.classList.remove('hidden');
+          noResults.classList.add('flex');
+        } else {
+          noResults.classList.add('hidden');
+          noResults.classList.remove('flex');
+        }
+      }
+    });
+  }
+</script>

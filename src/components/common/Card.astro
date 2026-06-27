@@ -1,0 +1,39 @@
+---
+interface Props {
+  variant?: 'default' | 'navy' | 'light' | 'bordered';
+  hoverEffect?: boolean;
+  class?: string;
+  id?: string;
+  [key: string]: any;
+}
+
+const {
+  variant = 'default',
+  hoverEffect = true,
+  class: className = '',
+  id,
+  ...rest
+} = Astro.props;
+
+const baseStyles = 'rounded-lg p-6 transition-all duration-300 ease-in-out border text-left overflow-hidden relative';
+
+const variantStyles = {
+  default: 'bg-white border-border text-text shadow-card',
+  navy: 'bg-navy border-navy-light text-white shadow-navy',
+  light: 'bg-light border-border text-text',
+  bordered: 'bg-white border-2 border-gold-light text-text shadow-card',
+};
+
+const hoverStyles = hoverEffect 
+  ? 'hover:-translate-y-1 hover:shadow-hover hover:border-gold/50' 
+  : '';
+
+const classes = `${baseStyles} ${variantStyles[variant]} ${hoverStyles} ${className}`;
+---
+
+<div id={id} class={classes} {...rest}>
+  {variant === 'bordered' && (
+    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gold to-gold-light" />
+  )}
+  <slot />
+</div>

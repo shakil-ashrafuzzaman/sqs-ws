@@ -1,0 +1,218 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import Badge from '@components/common/Badge.astro';
+import Button from '@components/common/Button.astro';
+import Card from '@components/common/Card.astro';
+import { sanityClient } from '@lib/sanity';
+
+export async function getStaticPaths() {
+  const industries = [
+    {
+      slug: 'construction-security',
+      title: 'Construction Site Security',
+      icon: '🏗️',
+      excerpt: 'Robust security solutions protecting high-value machinery, materials, and ensuring health & safety compliance on active building sites.',
+      risks: ['Theft of expensive plant machinery and materials', 'Vandalism and arson out of hours', 'Health and safety liabilities from trespassers', 'Unauthorized sub-contractor access'],
+      compliance: ['CSCS (Construction Skills Certification Scheme) qualified guards', 'BS7858 Vetted Staff', 'First Aid and Fire Marshal Trained', 'SIA Approved Contractor Status'],
+      caseStudy: {
+        title: 'Major UK Housing Development Secured',
+        snippet: 'SQS Security deployed rapid-response wireless CCTV towers and 24/7 gatehouse guards for a £40M development in Hampshire, completely eliminating material theft within the first month.'
+      },
+      cta: 'Secure Your Construction Site Today'
+    },
+    {
+      slug: 'logistics-security',
+      title: 'Logistics & Supply Chain Security',
+      icon: '🚛',
+      excerpt: 'Securing distribution centers, protecting high-value cargo in transit, and auditing supply chain vulnerabilities.',
+      risks: ['Organized cargo theft and hijacking', 'Internal shrinkage and staff collusion', 'Unauthorized depot access', 'Tampering with sealed transport units'],
+      compliance: ['SIA Licensed Security Personnel', 'BS7858 Background Checks', 'TAPA (Transported Asset Protection Association) guidelines', 'Strict Access Control Protocols'],
+      caseStudy: {
+        title: 'National Distribution Center Protection',
+        snippet: 'Provided continuous gatehouse access control and randomized exit searches for a major UK logistics hub, successfully reducing internal stock loss by 85%.'
+      },
+      cta: 'Protect Your Supply Chain Operations'
+    },
+    {
+      slug: 'retail-security',
+      title: 'Retail Security Solutions',
+      icon: '🏪',
+      excerpt: 'Loss prevention strategies, store detectives, and high-visibility guarding to protect retail profits and staff safety.',
+      risks: ['Shoplifting and organized retail crime', 'Staff abuse and anti-social behavior', 'Internal employee theft', 'Night-time break-ins'],
+      compliance: ['Conflict Management Trained Personnel', 'SIA Door Supervisor Licensed', 'Physical Intervention Training', 'Customer Service Excellence'],
+      caseStudy: {
+        title: 'High Street Loss Prevention',
+        snippet: 'Deployed covert store detectives alongside uniformed guards in a high-risk retail park. Apprehensions increased by 40% and overall shrinkage dropped significantly over a 6-month period.'
+      },
+      cta: 'Reduce Retail Shrinkage Now'
+    },
+    {
+      slug: 'healthcare-security',
+      title: 'Healthcare Security Services',
+      icon: '🏥',
+      excerpt: 'Compassionate yet robust security for hospitals and clinics, ensuring the safety of staff, patients, and controlled medical supplies.',
+      risks: ['Aggressive behavior towards medical staff', 'Theft of controlled drugs and medical equipment', 'Wandering vulnerable patients', 'Unauthorized access to restricted wards'],
+      compliance: ['SIA Licensed Officers with Healthcare specific training', 'Advanced Conflict De-escalation', 'Mental Health Awareness', 'DBS Enhanced Checks'],
+      caseStudy: {
+        title: 'NHS Trust Hospital Protection',
+        snippet: 'Provided a tailored team of empathetic security officers to a busy A&E department, drastically reducing violent incidents against nurses while maintaining a calm environment.'
+      },
+      cta: 'Enhance Your Healthcare Security'
+    },
+    {
+      slug: 'maritime-security',
+      title: 'Maritime & Port Security',
+      icon: '⚓',
+      excerpt: 'Specialized ISPS Code compliant security for commercial ports, harbors, and cargo terminals.',
+      risks: ['Stowaways and illegal immigration', 'Contraband smuggling', 'Piracy and unauthorized vessel access', 'Theft of unmanifested cargo'],
+      compliance: ['Strict ISPS Code Compliance', 'Department for Transport (DfT) standards', 'Specialized Maritime Security Training', 'BS7858 Vetted Staff'],
+      caseStudy: {
+        title: 'Commercial Port Access Control',
+        snippet: 'Managed primary gate access and X-ray scanning operations at a key southern UK port, ensuring 100% compliance during DfT audits.'
+      },
+      cta: 'Secure Your Maritime Facilities'
+    },
+    {
+      slug: 'education-security',
+      title: 'Education Sector Security',
+      icon: '🎓',
+      excerpt: 'Safeguarding students, staff, and campus facilities across schools, colleges, and university campuses.',
+      risks: ['Unauthorized campus intruders', 'Anti-social behavior and bullying', 'Theft of IT and laboratory equipment', 'Vandalism to campus property'],
+      compliance: ['Enhanced DBS Checks for all staff', 'Safeguarding Children & Vulnerable Adults Training', 'SIA Licensed', 'First Aid Certified'],
+      caseStudy: {
+        title: 'University Campus Patrols',
+        snippet: 'Implemented a 24/7 mobile and foot patrol strategy across a large university campus, ensuring student safety during night-time hours and reducing property vandalism.'
+      },
+      cta: 'Protect Your Educational Campus'
+    },
+    {
+      slug: 'corporate-security',
+      title: 'Corporate Security',
+      icon: '🏢',
+      excerpt: 'Premium concierge-style security providing impeccable front-of-house service combined with stringent access control.',
+      risks: ['Corporate espionage and data theft', 'Unauthorized access to executive floors', 'Protests and activist targeting', 'Workplace violence'],
+      compliance: ['SIA Licensed Corporate Officers', 'Impeccable Customer Service Standards', 'First Aid & Fire Marshal Trained', 'BS7858 Extensive Vetting'],
+      caseStudy: {
+        title: 'Headquarters Reception Security',
+        snippet: 'Supplied bespoke suited security personnel for a multinational corporate HQ in London, seamlessly blending high-level access control with 5-star concierge duties.'
+      },
+      cta: 'Upgrade Your Corporate Security'
+    }
+  ];
+
+  const contactInfo = await sanityClient.fetch(`*[_type == "contactInfo"][0]{
+    phone,
+    emergencyPhone
+  }`).catch(() => null);
+
+  return industries.map(industry => ({
+    params: { slug: industry.slug },
+    props: { industry, contactInfo },
+  }));
+}
+
+const { industry, contactInfo } = Astro.props;
+const phoneEmergency = contactInfo?.emergencyPhone || '0800 999 1234';
+---
+
+<PageLayout 
+  title={`${industry.title} | SQS Security`}
+  description={industry.excerpt}
+>
+  <!-- Hero Section -->
+  <section class="bg-navy py-16 md:py-24 text-white relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(19,45,85,0.8)_0%,rgba(7,20,41,1)_100%)]"></div>
+    <div class="container relative z-10 flex flex-col gap-6 max-w-4xl animate-fade-in-up">
+      <div class="flex items-center gap-3">
+        <a href="/industries" class="text-steel-light hover:text-white transition-colors text-sm flex items-center gap-1">
+          &larr; All Industries
+        </a>
+        <span class="text-steel-dark">/</span>
+        <Badge variant="gold">{industry.icon} Industry Sector</Badge>
+      </div>
+      <h1 class="font-display font-black text-4xl md:text-5xl lg:text-6xl text-white">
+        {industry.title}
+      </h1>
+      <p class="text-lg md:text-xl text-steel-light leading-relaxed">
+        {industry.excerpt}
+      </p>
+    </div>
+  </section>
+
+  <section class="section bg-light">
+    <div class="container grid grid-cols-1 lg:grid-cols-12 gap-12">
+      
+      <!-- Main Content -->
+      <div class="lg:col-span-8 flex flex-col gap-12">
+        
+        <!-- Security Risks -->
+        <div class="bg-white p-8 rounded-xl border border-border shadow-sm">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="bg-emergency/10 p-3 rounded-lg text-emergency">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+            <h2 class="font-display text-2xl font-bold text-navy">Industry Specific Risks</h2>
+          </div>
+          <p class="text-steel-dark mb-6">We understand that the {industry.title.toLowerCase()} sector faces unique threats. Our strategies specifically target:</p>
+          <ul class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {industry.risks.map((risk: string) => (
+              <li class="flex items-start gap-3 bg-light p-4 rounded-md border border-border">
+                <svg class="w-5 h-5 text-emergency mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span class="text-sm font-semibold text-navy leading-snug">{risk}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Compliance & Standards -->
+        <div class="bg-white p-8 rounded-xl border border-border shadow-sm">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="bg-success/10 p-3 rounded-lg text-success">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <h2 class="font-display text-2xl font-bold text-navy">Compliance & Vetting Standards</h2>
+          </div>
+          <p class="text-steel-dark mb-6">SQS Security guarantees strict adherence to all UK legal frameworks and industry-specific regulations.</p>
+          <div class="flex flex-col gap-3">
+            {industry.compliance.map((item: string) => (
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5 text-success shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                <span class="text-steel-dark font-medium">{item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Case Study Snippet -->
+        <Card class="bg-navy text-white border-none shadow-lg">
+          <h3 class="font-display text-xl font-bold text-gold mb-2">Proven Success</h3>
+          <h4 class="font-display text-2xl font-bold mb-4">{industry.caseStudy.title}</h4>
+          <p class="text-steel-light leading-relaxed mb-6 italic">"{industry.caseStudy.snippet}"</p>
+          <div class="border-t border-white/10 pt-4">
+            <span class="text-sm font-semibold text-white/70 uppercase tracking-wider">Client Case Study Highlight</span>
+          </div>
+        </Card>
+
+      </div>
+
+      <!-- Sidebar CTA -->
+      <aside class="lg:col-span-4 flex flex-col gap-6">
+        <div class="sticky top-6">
+          <div class="bg-white border-2 border-gold rounded-xl p-8 shadow-gold text-center flex flex-col items-center gap-6">
+            <span class="text-4xl">{industry.icon}</span>
+            <h3 class="font-display font-black text-2xl text-navy leading-tight">{industry.cta}</h3>
+            <p class="text-sm text-steel-dark">Contact our sector specialists today for a comprehensive site risk assessment.</p>
+            <Button href="/contact" variant="primary" class="w-full justify-center">
+              Request Assessment
+            </Button>
+            <div class="mt-4 pt-4 border-t border-border w-full flex flex-col gap-2">
+              <span class="text-xs uppercase font-bold text-steel">24/7 Operations Helpdesk</span>
+              <a href={`tel:${phoneEmergency.replace(/\s+/g, '')}`} class="text-xl font-black text-navy hover:text-blue transition-colors">{phoneEmergency}</a>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </section>
+</PageLayout>

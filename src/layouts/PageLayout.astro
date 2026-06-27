@@ -1,0 +1,76 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Header from '@components/layout/Header.astro';
+import Footer from '@components/layout/Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonical?: string;
+  schema?: Record<string, any> | Record<string, any>[];
+  noIndex?: boolean;
+}
+
+const { title, description, image, canonical, schema, noIndex } = Astro.props;
+
+// Auto-generate BreadcrumbList schema based on the current URL path
+const pathname = Astro.url.pathname;
+const paths = pathname.split('/').filter(Boolean);
+
+let breadcrumbs = [];
+if (paths.length > 0) {
+  breadcrumbs = paths.map((path, index) => {
+    const url = `${Astro.url.origin}/${paths.slice(0, index + 1).join('/')}`;
+    // Format name (e.g. "manned-guarding" -> "Manned Guarding")
+    const name = path.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    
+    return {
+      "@type": "ListItem",
+      "position": index + 2,
+      "name": name,
+      "item": url
+    };
+  });
+
+  // Always add Home as the first item
+  breadcrumbs.unshift({
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": Astro.url.origin
+  });
+}
+
+const breadcrumbSchema = breadcrumbs.length > 0 ? {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": breadcrumbs
+} : null;
+
+// Combine custom page schema with auto-generated breadcrumbs
+let finalSchema = schema;
+if (breadcrumbSchema) {
+  if (schema) {
+    finalSchema = Array.isArray(schema) ? [breadcrumbSchema, ...schema] : [breadcrumbSchema, schema];
+  } else {
+    finalSchema = breadcrumbSchema;
+  }
+}
+
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={image}
+  canonical={canonical}
+  schema={finalSchema}
+  noIndex={noIndex}
+>
+  <Header />
+  <main class="min-h-[60vh] flex flex-col">
+    <slot />
+  </main>
+  <Footer />
+</BaseLayout>

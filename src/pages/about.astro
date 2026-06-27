@@ -1,0 +1,212 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import Accreditations from '@components/sections/Accreditations.astro';
+import Badge from '@components/common/Badge.astro';
+import Card from '@components/common/Card.astro';
+---
+
+<PageLayout 
+  title="About SQS Security | Our Compliance & Standards"
+  description="Learn about SQS Security, our core values, and our industry-leading compliance standards including SIA Approved Contractor status and ISO 9001."
+>
+  <!-- Hero Section -->
+  <section class="bg-navy-dark py-20 md:py-32 text-white relative overflow-hidden">
+    <!-- Animated background gradients -->
+    <div class="absolute inset-0 z-0">
+      <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-gold-dark/20 rounded-full blur-[100px] opacity-60 animate-pulse"></div>
+      <div class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-navy-light/40 rounded-full blur-[120px] opacity-50"></div>
+      <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.15)_0%,transparent_100%)]"></div>
+    </div>
+
+    <div class="container relative z-10 flex flex-col items-center text-center gap-8 max-w-4xl animate-fade-in-up">
+      <!-- Google Review Badge -->
+      <a href="#reviews" class="inline-flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/20 px-5 py-2.5 rounded-full hover:bg-white/20 transition-all duration-300 shadow-lg cursor-pointer mb-2 group">
+        <svg class="w-5 h-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        <div class="flex items-center gap-1.5 border-l border-white/30 pl-3">
+          <div class="flex text-yellow-400">
+            {[1, 2, 3, 4, 5].map(() => (
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+            ))}
+          </div>
+          <span class="text-white text-sm font-semibold tracking-wide">4.9/5 Rating</span>
+        </div>
+      </a>
+
+      <Badge variant="gold" class="scale-110">About SQS Security</Badge>
+      
+      <h1 class="font-display font-black text-4xl sm:text-5xl md:text-6xl lg:text-7xl uppercase tracking-wider leading-tight">
+        <span class="text-white">Protecting What</span> <br/>
+        <span class="text-gradient-gold">Matters Most</span>
+      </h1>
+      
+      <p class="text-xl md:text-2xl text-steel-light leading-relaxed max-w-3xl font-medium">
+        For over a decade, we have been the trusted partner for enterprise-level security solutions across the UK, combining highly trained personnel with cutting-edge technology.
+      </p>
+    </div>
+  </section>
+
+  <!-- Company Stats Grid (New Section) -->
+  <section class="relative z-20 -mt-12 mb-16 container">
+    <div class="bg-white rounded-2xl shadow-[0_20px_50px_rgba(11,31,58,0.1)] border border-border p-8 md:p-12">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x-0 md:divide-x divide-y md:divide-y-0 divide-light">
+        <div class="flex flex-col items-center text-center p-4">
+          <span class="font-display font-black text-5xl text-navy mb-2">10<span class="text-gold">+</span></span>
+          <span class="text-steel-dark font-bold uppercase tracking-widest text-sm">Years Experience</span>
+        </div>
+        <div class="flex flex-col items-center text-center p-4">
+          <span class="font-display font-black text-5xl text-navy mb-2">100<span class="text-gold">+</span></span>
+          <span class="text-steel-dark font-bold uppercase tracking-widest text-sm">SIA Licensed Guards</span>
+        </div>
+        <div class="flex flex-col items-center text-center p-4">
+          <span class="font-display font-black text-5xl text-navy mb-2">24<span class="text-gold">/7</span></span>
+          <span class="text-steel-dark font-bold uppercase tracking-widest text-sm">National Control Room</span>
+        </div>
+        <div class="flex flex-col items-center text-center p-4">
+          <span class="font-display font-black text-5xl text-navy mb-2">50<span class="text-gold">+</span></span>
+          <span class="text-steel-dark font-bold uppercase tracking-widest text-sm">Active Sites UK Wide</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Mission & Values -->
+  <section class="section bg-light border-b border-border">
+    <div class="container grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <div class="flex flex-col gap-6">
+        <div class="inline-flex items-center gap-3 mb-2">
+          <div class="w-12 h-1 bg-gold"></div>
+          <span class="uppercase tracking-widest text-navy font-bold">Our Philosophy</span>
+        </div>
+        <h2 class="font-display font-black text-4xl md:text-5xl text-navy uppercase tracking-wide">
+          Our Mission
+        </h2>
+        <p class="text-steel-dark text-lg leading-relaxed">
+          At SQS Security, our mission is to provide robust, reliable, and intelligent security solutions that mitigate risk and ensure total peace of mind for our clients. We believe that physical security should never be a barrier to business, but an enabler of growth.
+        </p>
+        <p class="text-steel-dark text-lg leading-relaxed">
+          Through continuous investment in our people, rigorous vetting to BS7858 standards, and strict adherence to SIA guidelines, we have built a workforce that operates with unmatched professionalism and integrity.
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <!-- Value 1 -->
+        <div class="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-border hover:border-navy transform hover:-translate-y-2">
+          <div class="w-14 h-14 bg-navy/5 group-hover:bg-navy rounded-xl flex items-center justify-center mb-6 transition-colors duration-300">
+            <svg class="w-7 h-7 text-navy group-hover:text-gold transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <h3 class="font-display font-black text-2xl text-navy mb-3">Rapid Response</h3>
+          <p class="text-steel-dark leading-relaxed">Industry-leading dispatch times for mobile patrols and emergency alarms.</p>
+        </div>
+        
+        <!-- Value 2 -->
+        <div class="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-border hover:border-gold transform hover:-translate-y-2 mt-0 sm:mt-8">
+          <div class="w-14 h-14 bg-gold/10 group-hover:bg-gold rounded-xl flex items-center justify-center mb-6 transition-colors duration-300">
+            <svg class="w-7 h-7 text-gold-dark group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          </div>
+          <h3 class="font-display font-black text-2xl text-navy mb-3">Integrity</h3>
+          <p class="text-steel-dark leading-relaxed">Honesty, transparency, and full accountability in every operation.</p>
+        </div>
+        
+        <!-- Value 3 -->
+        <div class="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-border hover:border-teal-500 transform hover:-translate-y-2">
+          <div class="w-14 h-14 bg-teal-50 group-hover:bg-teal-500 rounded-xl flex items-center justify-center mb-6 transition-colors duration-300">
+            <svg class="w-7 h-7 text-teal-600 group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          </div>
+          <h3 class="font-display font-black text-2xl text-navy mb-3">Our People</h3>
+          <p class="text-steel-dark leading-relaxed">We invest heavily in the ongoing training and welfare of our officers.</p>
+        </div>
+        
+        <!-- Value 4 -->
+        <div class="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-border hover:border-blue-600 transform hover:-translate-y-2 mt-0 sm:mt-8">
+          <div class="w-14 h-14 bg-blue-50 group-hover:bg-blue-600 rounded-xl flex items-center justify-center mb-6 transition-colors duration-300">
+            <svg class="w-7 h-7 text-blue-600 group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/></svg>
+          </div>
+          <h3 class="font-display font-black text-2xl text-navy mb-3">Innovation</h3>
+          <p class="text-steel-dark leading-relaxed">Leveraging AI analytics and digital reporting for smarter security.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Accreditations Component Injected Here -->
+  <Accreditations />
+
+  <!-- Insurance & Liability Details -->
+  <section class="section bg-navy text-white relative overflow-hidden">
+    <!-- Subtle Pattern -->
+    <div class="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:3rem_3rem]"></div>
+    
+    <div class="container relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <div class="flex flex-col gap-6 items-start">
+        <Badge variant="gold" class="scale-125 transform origin-left">Complete Protection</Badge>
+        <h2 class="font-display font-bold text-3xl md:text-4xl text-white mt-2">
+          Comprehensive Insurance & Liability Coverage
+        </h2>
+        <p class="text-white text-lg leading-relaxed opacity-90">
+          When you partner with SQS Security, you are protected at every level. We maintain extensive, industry-specific insurance policies to ensure that your business, property, and people are financially safeguarded against all eventualities.
+        </p>
+        <p class="text-white text-sm font-medium opacity-80 mt-2">
+          * Full policy documents and verification certificates are available upon request during the procurement process.
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <!-- Public Liability -->
+        <div class="bg-white/5 border border-white/10 backdrop-blur-sm rounded-xl flex items-center justify-between p-6 hover:bg-white/10 transition-colors shadow-lg">
+          <div class="flex items-center gap-5">
+            <div class="bg-gold/20 p-4 rounded-xl text-gold shrink-0">
+              <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            </div>
+            <div class="flex flex-col gap-1">
+              <h3 class="font-display font-black text-2xl text-white tracking-wide drop-shadow-sm">Public Liability Insurance</h3>
+              <span class="text-steel-light text-base">Comprehensive coverage for third-party injury or property damage.</span>
+            </div>
+          </div>
+          <div class="text-right pl-4">
+            <span class="block font-display font-black text-3xl text-gold-light">£10M</span>
+            <span class="text-xs uppercase font-bold text-steel tracking-widest">Coverage</span>
+          </div>
+        </div>
+
+        <!-- Employer's Liability -->
+        <div class="bg-white/5 border border-white/10 backdrop-blur-sm rounded-xl flex items-center justify-between p-6 hover:bg-white/10 transition-colors shadow-lg">
+          <div class="flex items-center gap-5">
+            <div class="bg-blue-500/20 p-4 rounded-xl text-blue-400 shrink-0">
+              <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+            <div class="flex flex-col gap-1">
+              <h3 class="font-display font-black text-2xl text-white tracking-wide drop-shadow-sm">Employer's Liability</h3>
+              <span class="text-steel-light text-base">Protecting our highly trained personnel while deployed on your site.</span>
+            </div>
+          </div>
+          <div class="text-right pl-4">
+            <span class="block font-display font-black text-3xl text-gold-light">£10M</span>
+            <span class="text-xs uppercase font-bold text-steel tracking-widest">Coverage</span>
+          </div>
+        </div>
+
+        <!-- Professional Indemnity -->
+        <div class="bg-white/5 border border-white/10 backdrop-blur-sm rounded-xl flex items-center justify-between p-6 hover:bg-white/10 transition-colors shadow-lg">
+          <div class="flex items-center gap-5">
+            <div class="bg-teal-500/20 p-4 rounded-xl text-teal-400 shrink-0">
+              <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            </div>
+            <div class="flex flex-col gap-1">
+              <h3 class="font-display font-black text-2xl text-white tracking-wide drop-shadow-sm">Professional Indemnity</h3>
+              <span class="text-steel-light text-base">Coverage against claims of negligence in security consultancy and planning.</span>
+            </div>
+          </div>
+          <div class="text-right pl-4">
+            <span class="block font-display font-black text-3xl text-gold-light">£5M</span>
+            <span class="text-xs uppercase font-bold text-steel tracking-widest">Coverage</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</PageLayout>

@@ -1,0 +1,330 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import Badge from '@components/common/Badge.astro';
+import Button from '@components/common/Button.astro';
+import Card from '@components/common/Card.astro';
+import { sanityClient, urlFor } from '@lib/sanity';
+import { PortableText } from 'astro-portabletext';
+
+export async function getStaticPaths() {
+  const query = `*[_type == "service"] {
+    "slug": slug.current,
+    title,
+    excerpt,
+    body,
+    features,
+    faqs,
+    mainImage,
+    "related": relatedServices[]->{
+      title,
+      "slug": slug.current,
+      excerpt,
+      icon
+    }
+  }`;
+  const fetchedServices = await sanityClient.fetch(query).catch(() => []);
+
+  const fallbackServices = [
+      {
+        slug: 'security-guarding',
+        title: 'Security Guarding',
+        excerpt: 'Professional, SIA-licensed security guards to secure your premises, manage access control, and protect assets.',
+        content: 'Our SIA-licensed security guards are trained to the highest standards. We provide manned guarding solutions tailored to your specific requirements, protecting your buildings, assets, and staff around the clock.',
+        features: ['SIA Licensed Guards', '24/7 Patrols & Inspection', 'Access Control & Logbooks'],
+        faqs: []
+      },
+      {
+        slug: 'waking-watch',
+        title: 'Waking Watch',
+        excerpt: 'Dedicated fire safety patrols to detect fire hazards, raise alarms, and ensure safe evacuation in residential or commercial buildings.',
+        content: 'Our Waking Watch service provides dedicated fire safety wardens trained to spot fire hazards, maintain clear evacuation routes, and sound the alarm immediately in case of a fire, keeping occupants safe.',
+        features: ['24/7 Fire Patrols', 'Evacuation Management', 'SIA Trained Fire Wardens'],
+        faqs: []
+      },
+      {
+        slug: 'construction-security',
+        title: 'Construction Security',
+        excerpt: 'Specialized security solutions protecting high-value machinery, equipment, and preventing trespass on active building sites.',
+        content: 'Construction sites are prime targets for theft and vandalism. We supply SIA-licensed gatehouse guards, perimeter patrols, and wireless CCTV solutions to secure your active development around the clock.',
+        features: ['Perimeter Security', 'Asset & Tool Protection', 'Visitor & Contractor Access Control'],
+        faqs: []
+      },
+      {
+        slug: 'dog-handler-k9',
+        title: 'Dog Handler / K9',
+        excerpt: 'Highly trained security dog handlers providing a powerful visual deterrent and perimeter protection for high-risk sites.',
+        content: 'Our canine security teams combine professional SIA handlers with guard dogs trained to detect intruders, search premises, and protect large perimeters that are difficult to secure with guards alone.',
+        features: ['Canine Protection Teams', 'Powerful Visual Deterrent', 'Perimeter & Space Patrols'],
+        faqs: []
+      },
+      {
+        slug: 'warehouse-security',
+        title: 'Warehouse Security',
+        excerpt: 'Comprehensive protection for inventory, logistics depots, and warehouse facilities to prevent theft and stock shrinkage.',
+        content: 'SQS Security provides robust logistical and warehouse security. From gatehouse inspections and container seal checking to exit searches and randomized patrols, we minimize inventory loss.',
+        features: ['Inventory Loss Prevention', 'Gatehouse & Delivery Checks', 'Randomized Exit Audits'],
+        faqs: []
+      },
+      {
+        slug: 'office-security',
+        title: 'Office Security',
+        excerpt: 'Front-of-house concierge, reception guarding, and corporate access control tailormade for modern business premises.',
+        content: 'Create a safe and welcoming environment with our corporate office security. We provide suited concierge officers who balance 5-star customer service with absolute vigilance.',
+        features: ['Front-of-house Concierge', 'Corporate Access Management', 'Visitor Registration & Logs'],
+        faqs: []
+      },
+      {
+        slug: 'void-property',
+        title: 'Void Property',
+        excerpt: 'Vigilant protection and inspections for vacant, unoccupied commercial or residential buildings to prevent squatting and vandalism.',
+        content: 'Vacant buildings face massive risks of arson, theft, and squatting. SQS Security offers weekly property inspections, boarding services, and physical guarding to preserve your vacant real estate.',
+        features: ['Weekly Site Audits & Logs', 'Squatter & Arson Prevention', 'Boarding & Utility Verifications'],
+        faqs: []
+      },
+      {
+        slug: 'emergency-cover',
+        title: 'Emergency Cover',
+        excerpt: 'Rapidly deployed 24/7 emergency security officers for urgent cover, alarm responses, or sudden security breaches.',
+        content: 'If your site experiences a sudden security breach, system failure, or immediate threat, our 24/7 control room can deploy emergency security officers within hours to secure the premises.',
+        features: ['Deployments within 2 Hours', '24/7 Operational Helpline', 'Immediate Crisis Resolution'],
+        faqs: []
+      }
+    ];
+
+  const fetchedSlugs = new Set((fetchedServices || []).map((s: any) => s.slug));
+  const uniqueFallbackServices = fallbackServices.filter(s => !fetchedSlugs.has(s.slug));
+  const services = [...(fetchedServices || []), ...uniqueFallbackServices];
+
+  const contactInfo = await sanityClient.fetch(`*[_type == "contactInfo"][0]{
+    phone,
+    emergencyPhone,
+    addressLine1,
+    addressLine2,
+    city,
+    county,
+    postcode
+  }`).catch(() => null);
+
+  return services.map((service: any) => ({
+    params: { slug: service.slug },
+    props: { 
+      service, 
+      related: service.related || [],
+      contactInfo
+    },
+  }));
+}
+
+const { service, related, contactInfo } = Astro.props;
+const phoneEmergency = contactInfo?.emergencyPhone || '0800 999 1234';
+
+const addressLine1 = contactInfo?.addressLine1 || '86 Brintons Road';
+const addressLine2 = contactInfo?.addressLine2 || '';
+const city = contactInfo?.city || 'Southampton';
+const county = contactInfo?.county || 'Hampshire';
+const postcode = contactInfo?.postcode || 'SO14 0DB';
+
+// Schema for SEO
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "SecurityService",
+  "name": `${service.title} | SQS Security`,
+  "provider": {
+    "@type": "LocalBusiness",
+    "name": "SQS Security",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": addressLine2 ? `${addressLine1}, ${addressLine2}` : addressLine1,
+      "addressLocality": city,
+      "addressRegion": county,
+      "postalCode": postcode,
+      "addressCountry": "UK"
+    }
+  },
+  "description": service.excerpt,
+  "areaServed": "UK",
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Security Services",
+    "itemListElement": service.features.map((feature: string) => ({
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": feature
+      }
+    }))
+  }
+};
+
+const faqSchema = service.faqs && service.faqs.length > 0 ? {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": service.faqs.map((faq: {q: string, a: string}) => ({
+    "@type": "Question",
+    "name": faq.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.a
+    }
+  }))
+} : null;
+
+const schema = faqSchema ? [serviceSchema, faqSchema] : serviceSchema;
+---
+
+<PageLayout 
+  title={`${service.title} | SQS Security Services`}
+  description={service.excerpt}
+>
+  <!-- Inject JSON-LD SEO Schema -->
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+  <!-- Hero Section -->
+  <section class="bg-navy-light py-16 md:py-24 text-white relative">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(19,45,85,0.8)_0%,rgba(7,20,41,1)_100%)]"></div>
+    <div class="container relative z-10 flex flex-col gap-6 max-w-4xl animate-fade-in-up">
+      <div class="flex items-center gap-3">
+        <a href="/services" class="text-steel-light hover:text-white transition-colors text-sm flex items-center gap-1">
+          &larr; All Services
+        </a>
+        <span class="text-steel-dark">/</span>
+        <Badge variant="gold">{service.title}</Badge>
+      </div>
+      <h1 class="font-display font-black text-4xl md:text-5xl lg:text-6xl text-white">
+        {service.title}
+      </h1>
+      <p class="text-lg md:text-xl text-steel-light leading-relaxed">
+        {service.excerpt}
+      </p>
+      <div class="mt-4 flex flex-wrap gap-4">
+        <Button href="/contact" variant="primary" size="lg">Request a Proposal</Button>
+        <Button href={`tel:${phoneEmergency.replace(/\s+/g, '')}`} variant="outline" class="border-white/30 text-white">Call {phoneEmergency}</Button>
+      </div>
+    </div>
+  </section>
+
+  <div class="bg-light border-b border-border py-4">
+    <div class="container">
+      <ul class="flex flex-wrap gap-x-8 gap-y-2 text-sm font-semibold text-steel-dark">
+        <li class="flex items-center gap-2"><svg class="w-4 h-4 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> SIA Approved</li>
+        <li class="flex items-center gap-2"><svg class="w-4 h-4 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> BS7858 Vetted</li>
+        <li class="flex items-center gap-2"><svg class="w-4 h-4 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> 24/7 Dispatch</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Content Section -->
+  <section class="section bg-white">
+    <div class="container grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <!-- Main Content -->
+      <div class="lg:col-span-8 flex flex-col gap-10">
+        <div class="prose prose-lg prose-slate max-w-none text-steel-dark">
+          <h2 class="font-display text-navy text-3xl font-bold">About this service</h2>
+          <p class="leading-loose">{service.content}</p>
+        </div>
+
+        <div>
+          <h3 class="font-display text-navy text-2xl font-bold mb-6">Key Features</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {service.features.map((feature: string) => (
+              <div class="flex items-center gap-3 bg-light p-4 rounded-lg border border-border">
+                <div class="bg-gold/20 p-1.5 rounded-full text-gold-dark shrink-0">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                </div>
+                <span class="font-semibold text-navy">{feature}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- FAQs -->
+        {service.faqs && service.faqs.length > 0 && (
+          <div>
+            <h3 class="font-display text-navy text-2xl font-bold mb-6">Service FAQs</h3>
+            <div class="flex flex-col gap-4">
+              {service.faqs.map((faq: {q: string, a: string}, index: number) => (
+                <div class="border border-border rounded-md overflow-hidden bg-light transition-all duration-200">
+                  <button
+                    class="w-full text-left px-6 py-4 font-display font-bold text-navy hover:text-gold flex justify-between items-center bg-white cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+                    aria-expanded="false"
+                    aria-controls={`faq-answer-${index}`}
+                  >
+                    <span>{faq.q}</span>
+                    <svg class="w-5 h-5 text-steel transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  <div
+                    id={`faq-answer-${index}`}
+                    class="hidden px-6 py-4 text-sm text-steel-dark leading-relaxed bg-light border-t border-border"
+                    role="region"
+                  >
+                    <p>{faq.a}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="lg:col-span-4 flex flex-col gap-8">
+        <Card class="bg-navy text-white p-8">
+          <h3 class="font-display text-2xl font-bold mb-4">Urgent Cover Needed?</h3>
+          <p class="text-steel-light mb-6 text-sm">Our rapid response teams can deploy emergency security officers to your site within hours across Hampshire and the South.</p>
+          <div class="flex flex-col gap-3">
+            <Button href={`tel:${phoneEmergency.replace(/\s+/g, '')}`} variant="emergency" class="w-full justify-center">
+              Call {phoneEmergency}
+            </Button>
+          </div>
+        </Card>
+
+        {related && related.length > 0 && (
+          <div class="bg-light p-6 rounded-xl border border-border">
+            <h3 class="font-display text-lg font-bold text-navy mb-4">Related Services</h3>
+            <div class="flex flex-col gap-3">
+              {related.map((rel: any) => (
+                <a href={`/services/${rel.slug}`} class="group flex flex-col p-3 rounded bg-white border border-border hover:border-gold/50 transition-colors">
+                  <span class="font-bold text-navy text-sm group-hover:text-gold-dark transition-colors">{rel.title}</span>
+                  <span class="text-xs text-steel line-clamp-1">{rel.excerpt}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+      </aside>
+    </div>
+  </section>
+</PageLayout>
+
+<script>
+  // Setup accordion expansion behaviors
+  const accordions = document.querySelectorAll('[aria-expanded]');
+
+  accordions.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+      const targetId = btn.getAttribute('aria-controls');
+      const target = document.getElementById(targetId || '');
+      const arrowIcon = btn.querySelector('svg');
+
+      // Close all other accordions first
+      accordions.forEach((otherBtn) => {
+        if (otherBtn !== btn) {
+          otherBtn.setAttribute('aria-expanded', 'false');
+          const otherTargetId = otherBtn.getAttribute('aria-controls');
+          const otherTarget = document.getElementById(otherTargetId || '');
+          if (otherTarget) otherTarget.classList.add('hidden');
+          const otherIcon = otherBtn.querySelector('svg');
+          if (otherIcon) otherIcon.classList.remove('rotate-180');
+        }
+      });
+
+      // Toggle current
+      btn.setAttribute('aria-expanded', String(!isExpanded));
+      if (target) target.classList.toggle('hidden');
+      if (arrowIcon) arrowIcon.classList.toggle('rotate-180');
+    });
+  });
+</script>

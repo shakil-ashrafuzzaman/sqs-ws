@@ -1,0 +1,53 @@
+---
+interface Props {
+  href?: string;
+  target?: string;
+  variant?: 'primary' | 'secondary' | 'outline' | 'emergency';
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+  id?: string;
+  [key: string]: any; // Catch-all for extra props like aria-* or data-*
+}
+
+const {
+  href,
+  target,
+  variant = 'primary',
+  size = 'md',
+  class: className = '',
+  id,
+  ...rest
+} = Astro.props;
+
+// Base styles for transitions and hover states
+const baseStyles = 'inline-flex items-center justify-center font-display font-semibold transition-all duration-200 ease-in-out rounded-md cursor-pointer border focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-gold';
+
+// Style mapping for variants
+const variantStyles = {
+  primary: 'bg-gold border-gold text-navy hover:bg-gold-light hover:border-gold-light focus-visible:ring-2 focus-visible:ring-navy',
+  secondary: 'bg-blue border-blue text-white hover:bg-blue-dark hover:border-blue-dark',
+  outline: 'bg-transparent border-steel text-navy hover:bg-light hover:border-navy hover:text-navy',
+  emergency: 'bg-emergency border-emergency text-white hover:bg-red-800 hover:border-red-800 animate-pulse focus-visible:ring-2 focus-visible:ring-red-400',
+};
+
+// Size mapping
+const sizeStyles = {
+  sm: 'px-4 py-2 text-sm',
+  md: 'px-6 py-3 text-base',
+  lg: 'px-8 py-4 text-lg',
+};
+
+const classes = `${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`;
+---
+
+{
+  href ? (
+    <a href={href} target={target} rel={target === '_blank' ? 'noopener noreferrer' : undefined} id={id} class={classes} {...rest}>
+      <slot />
+    </a>
+  ) : (
+    <button id={id} class={classes} {...rest}>
+      <slot />
+    </button>
+  )
+}

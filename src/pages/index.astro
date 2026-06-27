@@ -1,0 +1,661 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import Button from '@components/common/Button.astro';
+import Card from '@components/common/Card.astro';
+import Badge from '@components/common/Badge.astro';
+import { sanityClient, urlFor } from '@lib/sanity';
+
+const [siteSettings, fetchedServices, contactInfo] = await Promise.all([
+  sanityClient.fetch(`*[_type == "siteSettings"][0]{
+    tagline,
+    "heroVideoUrl": heroVideo.asset->url,
+    heroImage
+  }`).catch(() => null),
+  sanityClient.fetch(`*[_type == "service"] | order(order asc)[0...8] {
+    title,
+    "slug": slug.current,
+    mainImage
+  }`).catch(() => []),
+  sanityClient.fetch(`*[_type == "contactInfo"][0]{
+    phone,
+    emergencyPhone,
+    addressLine1,
+    addressLine2,
+    city,
+    county,
+    postcode,
+    latitude,
+    longitude,
+    linkedIn,
+    twitter,
+    facebook
+  }`).catch(() => null)
+]);
+
+const phoneEmergency = contactInfo?.emergencyPhone || '08009991234';
+const addressLine1 = contactInfo?.addressLine1 || '86 Brintons Road';
+const addressLine2 = contactInfo?.addressLine2 || '';
+const city = contactInfo?.city || 'Southampton';
+const county = contactInfo?.county || 'Hampshire';
+const postcode = contactInfo?.postcode || 'SO14 0DB';
+const latitude = contactInfo?.latitude || 50.9084803;
+const longitude = contactInfo?.longitude || -1.4024222;
+
+const sameAs = [
+  contactInfo?.linkedIn,
+  contactInfo?.twitter,
+  contactInfo?.facebook
+].filter(Boolean);
+
+if (sameAs.length === 0) {
+  sameAs.push(
+    "https://www.linkedin.com/company/sqssecurity",
+    "https://twitter.com/sqssecurity"
+  );
+}
+
+const fallbackServices = [
+  {
+    title: 'Security Guarding',
+    slug: 'security-guarding',
+    imageFallback: '/images/security-guarding.png',
+  },
+  {
+    title: 'Waking Watch',
+    slug: 'waking-watch',
+    imageFallback: '/images/waking-watch-patrol.png',
+  },
+  {
+    title: 'Construction Security',
+    slug: 'construction-security',
+    imageFallback: '/images/construction-security.png',
+  },
+  {
+    title: 'Dog Handler / K9',
+    slug: 'dog-handler-k9',
+    imageFallback: '/images/dog-handler.png',
+  },
+  {
+    title: 'Warehouse Security',
+    slug: 'warehouse-security',
+    imageFallback: '/images/warehouse-security.png',
+  },
+  {
+    title: 'Office Security',
+    slug: 'office-security',
+    imageFallback: '/images/office-security.png',
+  },
+  {
+    title: 'Void Property',
+    slug: 'void-property',
+    imageFallback: '/images/void-property.png?v=2',
+  },
+  {
+    title: 'Emergency Cover',
+    slug: 'emergency-cover',
+    imageFallback: '/images/emergency-cover.png',
+  }
+];
+
+const getIconForService = (title: string) => {
+  const t = title.toLowerCase();
+  if (t.includes('guard')) return `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11V7a4 4 0 018 0v4m0 4.711A13.914 13.914 0 0014.828 20M14 21h-4"/></svg>`; 
+  if (t.includes('waking') || t.includes('fire')) return `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/></svg>`; 
+  if (t.includes('construction') || t.includes('site')) return `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>`; 
+  if (t.includes('dog') || t.includes('k9')) return `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/></svg>`; 
+  if (t.includes('warehouse') || t.includes('logistic')) return `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>`; 
+  if (t.includes('office') || t.includes('corporate')) return `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>`; 
+  if (t.includes('void') || t.includes('vacant')) return `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>`; 
+  if (t.includes('emergency')) return `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>`; 
+  return `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>`; 
+};
+
+const fetchedSlugs = new Set((fetchedServices || []).map((s: any) => s.slug));
+const uniqueFallbackServices = fallbackServices.filter(s => !fetchedSlugs.has(s.slug));
+const rawServices = [...(fetchedServices || []), ...uniqueFallbackServices];
+
+const fallbackImagesBySlug: Record<string, string> = {
+  'security-guarding': '/images/security-guarding.png',
+  'waking-watch': '/images/waking-watch-patrol.png',
+  'construction-security': '/images/construction-security.png',
+  'dog-handler-k9': '/images/dog-handler.png',
+  'warehouse-security': '/images/warehouse-security.png',
+  'office-security': '/images/office-security.png',
+  'void-property': '/images/void-property.png?v=2',
+  'emergency-cover': '/images/emergency-cover.png'
+};
+
+const services = rawServices.map((service: any) => {
+  const slug = service.slug || '';
+  const fallbackImage = fallbackImagesBySlug[slug] || 'https://images.unsplash.com/photo-1590674899484-d5640e854abe?w=800&auto=format&fit=crop&q=80';
+  return {
+    ...service,
+    mainImageUrl: service.mainImage?.asset 
+      ? urlFor(service.mainImage).width(800).height(1000).url() 
+      : (service.imageFallback || fallbackImage)
+  };
+});
+
+// Generate Organization & LocalBusiness Schema
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": ["Organization", "LocalBusiness", "SecurityService"],
+  "name": "SQS Security",
+  "url": "https://sqssecurity.co.uk",
+  "logo": "https://sqssecurity.co.uk/logo.png",
+  "image": "https://sqssecurity.co.uk/assets/branding/sqs-og-fallback.jpg",
+  "description": "SQS Security provides enterprise-grade manned guarding, CCTV monitoring, and rapid alarm response across the UK.",
+  "telephone": phoneEmergency,
+  "priceRange": "££",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": addressLine2 ? `${addressLine1}, ${addressLine2}` : addressLine1,
+    "addressLocality": city,
+    "addressRegion": county,
+    "postalCode": postcode,
+    "addressCountry": "UK"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": latitude,
+    "longitude": longitude
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "United Kingdom"
+  },
+  "sameAs": sameAs
+};
+
+const pageSchema = [organizationSchema];
+---
+
+<PageLayout
+  title="Home"
+  description="SQS Security provides industry-leading manned guarding, CCTV monitoring, mobile patrols, and rapid alarm response services. Trust SQS for complete site protection."
+  schema={pageSchema}
+>
+  <!-- 1. Hero Section -->
+  <section class="relative bg-black text-white overflow-hidden h-[85vh] min-h-[600px] flex flex-col justify-center items-center border-b-4 border-gold">
+    
+    <!-- Dynamic Background from Sanity -->
+    {siteSettings?.heroVideoUrl ? (
+      <video 
+        autoplay 
+        loop 
+        muted 
+        playsinline 
+        class="absolute inset-0 w-full h-full object-cover z-0"
+      >
+        <source src={siteSettings.heroVideoUrl} type="video/mp4" />
+      </video>
+    ) : siteSettings?.heroImage?.asset ? (
+      <img 
+        src={urlFor(siteSettings.heroImage).width(1920).height(1080).url()} 
+        alt="SQS Security Hero" 
+        class="absolute inset-0 w-full h-full object-cover z-0" 
+      />
+    ) : (
+      <!-- CSS Animated Slider Background -->
+      <div class="absolute inset-0 w-full h-full z-0 overflow-hidden bg-navy">
+        {[
+          { img: '/images/security-guarding.png', name: 'Security Guarding', pos: 'object-center' },
+          { img: '/images/emergency-cover.png', name: 'Emergency Cover', pos: 'object-center' },
+          { img: '/images/office-security.png', name: 'Office Security', pos: 'object-[center_25%] md:object-[center_30%]' },
+          { img: '/images/construction-security.png', name: 'Construction Security', pos: 'object-center' },
+          { img: '/images/void-property.png?v=2', name: 'Void Property Security', pos: 'object-center' },
+          { img: '/images/dog-handler.png', name: 'K9 Dog Handler', pos: 'object-[30%_60%] md:object-[25%_60%]' },
+          { img: '/images/warehouse-security.png', name: 'Warehouse Security', pos: 'object-center' },
+          { img: '/images/waking-watch-patrol.png', name: 'Waking Watch', pos: 'object-center' }
+        ].map((item, index) => (
+          <div 
+            class="absolute inset-0 w-full h-full opacity-0 hero-slider-wrapper"
+            style={`animation-delay: ${index * 4}s;`}
+          >
+            <img 
+              src={item.img} 
+              alt={item.name} 
+              class={`absolute inset-0 w-full h-full object-cover hero-slider-img-scale filter brightness-[1.1] contrast-[1.15] saturate-[1.1] ${item.pos}`}
+              style={`animation-delay: ${index * 4}s;`}
+            />
+            <!-- Elegant dark overlay: Moved inside the slider loop so text sits clearly above it -->
+            <div class="absolute inset-0 bg-gradient-to-r from-navy-dark/95 via-navy/60 to-navy-dark/10 z-10"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-navy-dark/90 via-navy/20 to-transparent z-10 mix-blend-multiply"></div>
+
+            <div class="absolute top-24 md:top-32 left-6 md:left-16 lg:left-24 z-30">
+              <h3 class="text-3xl sm:text-4xl md:text-6xl font-black !text-white uppercase tracking-wider drop-shadow-2xl" style="color: #ffffff !important; text-shadow: 2px 2px 8px rgba(0,0,0,0.9), -1px -1px 8px rgba(0,0,0,0.9);">{item.name}</h3>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+
+
+    <div class="w-full px-6 md:px-16 lg:px-24 relative z-20 flex flex-col items-start text-left gap-6 animate-fade-in-up mt-16">
+      <h1 class="font-display font-black text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white leading-tight max-w-5xl drop-shadow-2xl uppercase tracking-wider">
+        <span class="text-gold-dark">Protecting People,</span> <br/>
+        <span class="text-gold-dark">Property & Business</span>
+      </h1>
+      <p class="text-base sm:text-lg md:text-2xl font-extrabold text-white max-w-3xl leading-relaxed mt-2" style="text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);">
+        {siteSettings?.tagline || 'Enterprise-grade security services tailored for UK businesses.'}
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-10">
+        <Button href={`tel:${phoneEmergency.replace(/\s+/g, '')}`} variant="outline" size="lg" class="w-full sm:w-auto text-lg px-10 py-4 bg-navy/60 border-white/40 text-white backdrop-blur-md hover:bg-navy/90 hover:border-gold shadow-xl transition-all">
+          {phoneEmergency}
+        </Button>
+        <Button href="/contact" variant="outline" size="lg" class="w-full sm:w-auto text-lg px-10 py-4 bg-navy/60 border-white/40 text-white backdrop-blur-md hover:bg-navy/90 hover:border-gold shadow-xl transition-all">
+          Enquire Now
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Welcome Section -->
+  <section class="bg-gold-light py-24 text-navy-dark">
+    <div class="container max-w-4xl text-center flex flex-col gap-8">
+      <h2 class="font-display font-black text-4xl md:text-5xl uppercase tracking-wide">Welcome to SQS Security</h2>
+      <p class="text-lg md:text-xl font-medium leading-relaxed">
+        At SQS Security, we specialise in delivering high-quality building support and security services across commercial and residential settings. Our experienced team provides professional personnel for a range of roles including Manned Guarding, Concierge, CCTV Monitoring, and Key Holding. All staff are fully trained and SIA-licensed, ensuring that each service is tailored to meet the unique needs of our clients.
+      </p>
+    </div>
+  </section>
+
+  <!-- 3. Security Services Section -->
+  <section id="services" class="bg-white py-24 border-t-8 border-navy-dark">
+    <div class="container-fluid px-4 md:px-8 lg:px-12 flex flex-col gap-16">
+      <div class="text-center max-w-3xl mx-auto flex flex-col gap-4">
+        <h2 class="font-display text-4xl md:text-5xl font-black uppercase tracking-widest">
+          <span class="text-gradient-gold">Our Services</span>
+        </h2>
+        <div class="w-20 h-1 bg-gold-light mx-auto"></div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-[1400px] mx-auto w-full">
+        {services.length > 0 ? services.map((service: any) => (
+          <a href={`/services/${service.slug}`} class="group block relative overflow-hidden bg-navy-dark aspect-[4/5] sm:aspect-auto sm:h-[420px] w-full rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.15)] border border-border hover:border-gold-light/60 transition-all duration-500">
+            {service.mainImageUrl ? (
+              <img 
+                src={service.mainImageUrl} 
+                alt={service.title} 
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.15] opacity-80 group-hover:opacity-40" 
+              />
+            ) : (
+              <div class="absolute inset-0 bg-navy"></div>
+            )}
+            
+            <!-- Dark gradient overlay for text readability -->
+            <div class="absolute inset-0 bg-gradient-to-t from-navy-dark via-navy-dark/70 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300"></div>
+            
+            <!-- Animated Icon Top Right -->
+            <div class="absolute top-6 right-6 w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-gold group-hover:scale-110 group-hover:bg-gold group-hover:text-navy transition-all duration-500 shadow-lg">
+              <Fragment set:html={getIconForService(service.title)} />
+            </div>
+
+            <div class="absolute inset-0 p-8 flex flex-col justify-end">
+              <div class="transform translate-y-6 group-hover:translate-y-0 transition-transform duration-500">
+                <h3 class="font-display font-black text-[22px] tracking-wide uppercase leading-tight mb-4">
+                  <span class="text-white drop-shadow-md">{service.title}</span>
+                </h3>
+                
+                <div class="h-[2px] w-12 bg-gold mb-5 group-hover:w-full transition-all duration-700 ease-in-out"></div>
+                
+                <span class="inline-flex items-center gap-2 text-gold-light text-sm font-bold tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                  Explore Service
+                  <svg class="w-4 h-4 group-hover:translate-x-2 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                </span>
+              </div>
+            </div>
+          </a>
+        )) : (
+          <div class="col-span-full text-center text-steel-light py-12 border border-dashed border-steel-dark rounded-xl">
+            <p class="text-xl">No services published yet.</p>
+            <p class="text-sm mt-2">Please upload Services with Main Images in Sanity CMS.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Accreditations Trust Indicators -->
+  <section class="bg-light py-16 border-y border-border">
+    <div class="container flex flex-col gap-8">
+      <p class="text-lg md:text-xl uppercase tracking-widest text-center text-navy font-black drop-shadow-sm">Accreditations & Certifications</p>
+      <div class="flex flex-wrap justify-center items-center gap-10 md:gap-20 opacity-80 hover:opacity-100 transition-opacity">
+        <div class="flex flex-col items-center gap-2">
+          <span class="font-display font-black text-navy text-2xl tracking-wider border-2 border-navy px-4 py-2 rounded">SIA</span>
+          <span class="text-[10px] uppercase font-bold text-steel">Approved Contractor</span>
+        </div>
+        <div class="flex flex-col items-center gap-2">
+          <span class="font-display font-bold text-navy text-lg border-2 border-gold-dark px-4 py-2 rounded">ISO 9001</span>
+          <span class="text-[10px] uppercase font-bold text-steel">Quality Assured</span>
+        </div>
+        <div class="flex flex-col items-center gap-2">
+          <span class="font-display font-bold text-navy text-lg border-2 border-gold-dark px-4 py-2 rounded">ISO 14001</span>
+          <span class="text-[10px] uppercase font-bold text-steel">Environmental</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Trusted Clients & Partners -->
+  <section class="section bg-light py-24 border-t border-border overflow-hidden">
+    <div class="container relative z-20 flex flex-col gap-16 overflow-hidden">
+      <div class="text-center max-w-3xl mx-auto">
+        <h2 class="font-display font-black text-4xl md:text-5xl text-navy uppercase tracking-wider mb-6 drop-shadow-sm">
+          Our Trusted <span class="text-gradient-gold">Clients & Partners</span>
+        </h2>
+        <p class="text-steel-dark font-medium text-lg">
+          We build long-lasting relationships with businesses across the UK, delivering uncompromising security and peace of mind.
+        </p>
+      </div>
+
+      <!-- Testimonials Marquee -->
+      <div class="relative w-full overflow-hidden flex group rounded-xl">
+        <!-- Overlay gradients for smooth fading edges -->
+        <div class="absolute left-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-r from-light to-transparent z-10 pointer-events-none"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-l from-light to-transparent z-10 pointer-events-none"></div>
+
+        <div class="flex animate-marquee group-hover:[animation-play-state:paused] gap-8 py-4">
+          {[1, 2].map(() => (
+            <div class="flex gap-8 shrink-0">
+              <!-- Testimonial 1 -->
+              <div class="w-[350px] md:w-[400px] shrink-0 bg-white p-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-2 border-gold/60 hover:border-gold hover:shadow-[0_15px_40px_rgba(212,175,55,0.2)] transition-all duration-300 relative flex flex-col transform hover:-translate-y-1">
+                <div class="absolute -top-4 -right-4 w-20 h-20 bg-gold/10 rounded-full blur-2xl pointer-events-none"></div>
+                <p class="text-steel-dark text-base leading-relaxed mb-8 relative z-10 italic flex-grow font-medium">
+                  "SQS Security has serviced our sites for several years, always demonstrating professionalism with a personal touch. Problems are handled efficiently."
+                </p>
+                <div class="flex items-center gap-4 mt-auto">
+                  <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-gold to-yellow-300 flex items-center justify-center text-white font-black text-lg shadow-md">JD</div>
+                  <div><p class="font-bold text-navy text-base">John Doe</p><p class="text-sm text-steel">Operations Manager</p></div>
+                </div>
+              </div>
+              <!-- Testimonial 2 -->
+              <div class="w-[350px] md:w-[400px] shrink-0 bg-white p-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-2 border-gold/60 hover:border-gold hover:shadow-[0_15px_40px_rgba(212,175,55,0.2)] transition-all duration-300 relative flex flex-col transform hover:-translate-y-1">
+                <div class="absolute -top-4 -right-4 w-20 h-20 bg-gold/10 rounded-full blur-2xl pointer-events-none"></div>
+                <p class="text-steel-dark text-base leading-relaxed mb-8 relative z-10 italic flex-grow font-medium">
+                  "Since changing our security systems over to SQS, we have built a great working relationship. Their guards are extremely professional. Response times are second to none."
+                </p>
+                <div class="flex items-center gap-4 mt-auto">
+                  <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-gold to-yellow-300 flex items-center justify-center text-white font-black text-lg shadow-md">SM</div>
+                  <div><p class="font-bold text-navy text-base">Sarah Mitchell</p><p class="text-sm text-steel">Facilities Director</p></div>
+                </div>
+              </div>
+              <!-- Testimonial 3 -->
+              <div class="w-[350px] md:w-[400px] shrink-0 bg-white p-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-2 border-gold/60 hover:border-gold hover:shadow-[0_15px_40px_rgba(212,175,55,0.2)] transition-all duration-300 relative flex flex-col transform hover:-translate-y-1">
+                <div class="absolute -top-4 -right-4 w-20 h-20 bg-gold/10 rounded-full blur-2xl pointer-events-none"></div>
+                <p class="text-steel-dark text-base leading-relaxed mb-8 relative z-10 italic flex-grow font-medium">
+                  "SQS provided our project with 24-hour security and access control. The service has been exemplary, from the standard of guards to emergency call outs."
+                </p>
+                <div class="flex items-center gap-4 mt-auto">
+                  <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-gold to-yellow-300 flex items-center justify-center text-white font-black text-lg shadow-md">DT</div>
+                  <div><p class="font-bold text-navy text-base">David Turner</p><p class="text-sm text-steel">Site Manager</p></div>
+                </div>
+              </div>
+              <!-- Testimonial 4 -->
+              <div class="w-[350px] md:w-[400px] shrink-0 bg-white p-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-2 border-gold/60 hover:border-gold hover:shadow-[0_15px_40px_rgba(212,175,55,0.2)] transition-all duration-300 relative flex flex-col transform hover:-translate-y-1">
+                <div class="absolute -top-4 -right-4 w-20 h-20 bg-gold/10 rounded-full blur-2xl pointer-events-none"></div>
+                <p class="text-steel-dark text-base leading-relaxed mb-8 relative z-10 italic flex-grow font-medium">
+                  "Highly reliable and trustworthy security partner. We rely on their mobile patrols every night, and they have successfully prevented multiple intrusions."
+                </p>
+                <div class="flex items-center gap-4 mt-auto">
+                  <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-gold to-yellow-300 flex items-center justify-center text-white font-black text-lg shadow-md">EH</div>
+                  <div><p class="font-bold text-navy text-base">Emma Hayes</p><p class="text-sm text-steel">Logistics Head</p></div>
+                </div>
+              </div>
+              <!-- Testimonial 5 -->
+              <div class="w-[350px] md:w-[400px] shrink-0 bg-white p-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-2 border-gold/60 hover:border-gold hover:shadow-[0_15px_40px_rgba(212,175,55,0.2)] transition-all duration-300 relative flex flex-col transform hover:-translate-y-1">
+                <div class="absolute -top-4 -right-4 w-20 h-20 bg-gold/10 rounded-full blur-2xl pointer-events-none"></div>
+                <p class="text-steel-dark text-base leading-relaxed mb-8 relative z-10 italic flex-grow font-medium">
+                  "The waking watch team from SQS was deployed within hours. Their rapid response and professional demeanor gave our residents total peace of mind."
+                </p>
+                <div class="flex items-center gap-4 mt-auto">
+                  <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-gold to-yellow-300 flex items-center justify-center text-white font-black text-lg shadow-md">RJ</div>
+                  <div><p class="font-bold text-navy text-base">Richard Jones</p><p class="text-sm text-steel">Property Manager</p></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <!-- Logos Marquee -->
+      <div class="mt-4 pt-16 border-t border-border relative w-full overflow-hidden flex group">
+        <div class="absolute top-6 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap">
+          <p class="text-sm font-black text-navy uppercase tracking-widest bg-white px-8 py-2 rounded-full shadow-sm border border-border">Trusted by leading organisations</p>
+        </div>
+        
+        <!-- Overlay gradients -->
+        <div class="absolute left-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-r from-light to-transparent z-10 pointer-events-none"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-l from-light to-transparent z-10 pointer-events-none"></div>
+
+        <div class="flex animate-marquee-fast group-hover:[animation-play-state:paused] gap-16 py-8 items-center mt-6">
+          {[1, 2].map(() => (
+            <div class="flex gap-16 shrink-0 items-center">
+              <div class="text-3xl font-black font-display text-blue-600 drop-shadow-sm shrink-0">NHS</div>
+              <div class="text-2xl font-black font-display text-red-600 shrink-0 tracking-tighter">HSBC</div>
+              <div class="text-2xl font-black font-display text-navy uppercase tracking-widest border-2 border-gold px-3 py-1 shrink-0">TESCO</div>
+              <div class="text-2xl font-bold font-display text-blue-500 italic drop-shadow-sm shrink-0">BARCLAYS</div>
+              <div class="text-3xl font-black font-display text-orange-500 shrink-0">amazon <span class="font-light text-sm text-steel">logistics</span></div>
+              <div class="text-2xl font-black font-display text-emerald-600 shrink-0">MACMILLAN</div>
+              <div class="text-2xl font-black font-display text-navy shrink-0">BAE<span class="text-red-600">SYSTEMS</span></div>
+              <div class="text-2xl font-black font-display text-indigo-600 shrink-0 italic">KPMG</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- How It Works / Our Process -->
+  <section class="section bg-white py-24 border-t border-border relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-1/2 h-full bg-light rounded-l-[100px] z-0 hidden lg:block"></div>
+    <div class="container relative z-10 flex flex-col gap-16">
+      <div class="text-center max-w-3xl mx-auto">
+        <h2 class="font-display font-black text-4xl md:text-5xl text-navy uppercase tracking-wider mb-6">
+          Our Simple <span class="text-gradient-gold">3-Step Process</span>
+        </h2>
+        <p class="text-steel-dark font-medium text-lg">
+          Securing your premises shouldn't be complicated. We make it easy from initial enquiry to active deployment.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+        <!-- Connecting Line for Desktop -->
+        <div class="hidden md:block absolute top-12 left-[15%] right-[15%] h-0.5 bg-border z-0"></div>
+
+        <!-- Step 1 -->
+        <div class="relative z-10 flex flex-col items-center text-center gap-6 bg-white p-8 rounded-2xl shadow-sm border-2 border-red-500 hover:border-red-600 hover:shadow-[0_10px_30px_rgba(239,68,68,0.15)] transition-all duration-300 transform hover:-translate-y-1">
+          <div class="w-24 h-24 rounded-full bg-navy flex items-center justify-center text-white text-3xl font-black shadow-lg relative">
+            1
+            <div class="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-gold flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+            </div>
+          </div>
+          <div>
+            <h3 class="font-display font-bold text-xl text-navy mb-3 uppercase tracking-wide">Tell Us Your Risk</h3>
+            <p class="text-steel leading-relaxed">Call our team or submit a quote request. Tell us your site type, location, and any specific security risks or requirements.</p>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="relative z-10 flex flex-col items-center text-center gap-6 bg-white p-8 rounded-2xl shadow-sm border-2 border-gold hover:border-gold-dark hover:shadow-[0_10px_30px_rgba(212,175,55,0.15)] transition-all duration-300 transform hover:-translate-y-1">
+          <div class="w-24 h-24 rounded-full bg-gold flex items-center justify-center text-navy text-3xl font-black shadow-lg relative">
+            2
+            <div class="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-navy flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+          </div>
+          <div>
+            <h3 class="font-display font-bold text-xl text-navy mb-3 uppercase tracking-wide">Tailored Security Plan</h3>
+            <p class="text-steel leading-relaxed">We assess your requirements and provide a clear, no-obligation proposal along with a site-specific security plan.</p>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="relative z-10 flex flex-col items-center text-center gap-6 bg-white p-8 rounded-2xl shadow-sm border-2 border-teal-400 hover:border-teal-500 hover:shadow-[0_10px_30px_rgba(45,212,191,0.15)] transition-all duration-300 transform hover:-translate-y-1">
+          <div class="w-24 h-24 rounded-full bg-navy flex items-center justify-center text-white text-3xl font-black shadow-lg relative">
+            3
+            <div class="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-gold flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
+          <div>
+            <h3 class="font-display font-bold text-xl text-navy mb-3 uppercase tracking-wide">Deploy & Report</h3>
+            <p class="text-steel leading-relaxed">Our SIA-licensed officers are deployed on time, briefed, and ready. We provide written shift reports and incident logs.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="section bg-light py-24 border-t border-border">
+    <div class="container max-w-4xl flex flex-col gap-12">
+      <div class="text-center">
+        <h2 class="font-display font-black text-4xl md:text-5xl text-navy uppercase tracking-wider mb-4">
+          Frequently <span class="text-gradient-gold">Asked Questions</span>
+        </h2>
+        <p class="text-steel-dark font-medium text-lg">
+          Common questions from FM companies, project managers, and property teams.
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-5">
+        <!-- FAQ Item 1 -->
+        <details class="group bg-white rounded-xl shadow-sm border border-border border-l-[6px] border-l-blue-500 hover:border-l-blue-600 hover:shadow-md transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between cursor-pointer p-6 font-display font-bold text-lg text-navy">
+            <span class="group-hover:text-blue-600 transition-colors">Are all your security guards SIA licensed?</span>
+            <span class="transition group-open:rotate-180 bg-blue-50 text-blue-600 p-2 rounded-full">
+              <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+            </span>
+          </summary>
+          <div class="px-6 pb-6 text-steel leading-relaxed border-t border-border pt-4 mt-2">
+            Yes. Every security officer we deploy holds a current SIA (Security Industry Authority) licence. This is a legal requirement in the UK and ensures our personnel have passed rigorous identity checks, criminal record checks, and relevant security training.
+          </div>
+        </details>
+
+        <!-- FAQ Item 2 -->
+        <details class="group bg-white rounded-xl shadow-sm border border-border border-l-[6px] border-l-gold hover:border-l-gold-dark hover:shadow-md transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between cursor-pointer p-6 font-display font-bold text-lg text-navy">
+            <span class="group-hover:text-gold-dark transition-colors">Do you provide emergency or short-notice cover?</span>
+            <span class="transition group-open:rotate-180 bg-gold/10 text-gold-dark p-2 rounded-full">
+              <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+            </span>
+          </summary>
+          <div class="px-6 pb-6 text-steel leading-relaxed border-t border-border pt-4 mt-2">
+            Absolutely. We understand that security gaps happen without warning. SQS Security responds quickly to urgent cover requests, providing SIA-licensed officers without complicated procurement delays.
+          </div>
+        </details>
+
+        <!-- FAQ Item 3 -->
+        <details class="group bg-white rounded-xl shadow-sm border border-border border-l-[6px] border-l-teal-500 hover:border-l-teal-600 hover:shadow-md transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between cursor-pointer p-6 font-display font-bold text-lg text-navy">
+            <span class="group-hover:text-teal-600 transition-colors">What kind of reporting do you provide?</span>
+            <span class="transition group-open:rotate-180 bg-teal-50 text-teal-600 p-2 rounded-full">
+              <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+            </span>
+          </summary>
+          <div class="px-6 pb-6 text-steel leading-relaxed border-t border-border pt-4 mt-2">
+            We provide clear, written reporting for every deployment. Shift reports, access logs, and incident records are delivered to clients after every assignment, so you never have to chase us for documentation.
+          </div>
+        </details>
+
+        <!-- FAQ Item 4 -->
+        <details class="group bg-white rounded-xl shadow-sm border border-border border-l-[6px] border-l-purple-500 hover:border-l-purple-600 hover:shadow-md transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between cursor-pointer p-6 font-display font-bold text-lg text-navy">
+            <span class="group-hover:text-purple-600 transition-colors">Do you cover my specific area?</span>
+            <span class="transition group-open:rotate-180 bg-purple-50 text-purple-600 p-2 rounded-full">
+              <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+            </span>
+          </summary>
+          <div class="px-6 pb-6 text-steel leading-relaxed border-t border-border pt-4 mt-2">
+            While our headquarters is based in Southampton, we provide comprehensive, UK-wide deployment. Whether you are in London, Manchester, Brighton, or Birmingham, we have local experts ready to secure your premises.
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+  <!-- 5. Final CTA Section -->
+  <section class="section bg-white text-navy relative overflow-hidden border-t border-border">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(240,244,248,0.5)_0%,rgba(255,255,255,1)_100%)] pointer-events-none"></div>
+    <div class="container relative z-10 text-center max-w-3xl flex flex-col items-center gap-8 py-16">
+      <h2 class="font-black font-display text-4xl md:text-5xl leading-tight uppercase tracking-wide">
+        <span class="text-gradient-gold">Schedule a Meeting</span>
+      </h2>
+      <p class="text-steel-dark text-lg max-w-2xl font-medium">
+        With SQS Security, you can trust that our high-quality teams are dedicated to the well-being of the community they serve. Contact us today.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4 justify-center">
+        <Button href="/contact" variant="primary" size="lg" class="px-10 py-4 text-lg">
+          Contact Us
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Google Map Embed -->
+  <section class="h-[500px] w-full relative group border-t border-border">
+    <!-- Top shadow gradient to blend with content above -->
+    <div class="absolute top-0 left-0 w-full h-12 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none"></div>
+    <iframe 
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2516.486300405106!2d-1.4024222!3d50.9084803!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4874713c72626e25%3A0x6b2e1e0a2d5f3d38!2s86%20Brintons%20Rd%2C%20Southampton!5e0!3m2!1sen!2suk!4v1680000000000!5m2!1sen!2suk" 
+      width="100%" 
+      height="100%" 
+      style="border:0;" 
+      allowfullscreen="" 
+      loading="lazy" 
+      referrerpolicy="no-referrer-when-downgrade"
+      class="absolute inset-0 transition-opacity duration-500"
+      title="SQS Security Office Location"
+    ></iframe>
+    <!-- Interactive overlay that disappears on hover so map is usable, but looks nice before interaction -->
+    <div class="absolute inset-0 bg-navy/5 group-hover:bg-transparent transition-colors duration-500 pointer-events-none"></div>
+  </section>
+</PageLayout>
+
+<style is:global>
+  @keyframes scroll {
+    0% { transform: translateX(calc(-50% - 1rem)); }
+    100% { transform: translateX(0); }
+  }
+  @keyframes scroll-fast {
+    0% { transform: translateX(calc(-50% - 2rem)); }
+    100% { transform: translateX(0); }
+  }
+  .animate-marquee {
+    animation: scroll 40s linear infinite;
+    width: max-content;
+  }
+  .animate-marquee-fast {
+    animation: scroll-fast 25s linear infinite;
+    width: max-content;
+  }
+  
+  .hero-slider-wrapper {
+    animation: heroFadeOpacity 32s infinite;
+  }
+  .hero-slider-img-scale {
+    animation: heroFadeScale 32s infinite;
+  }
+  
+  @keyframes heroFadeOpacity {
+    0% { opacity: 0; }
+    3.125% { opacity: 1; }
+    12.5% { opacity: 1; }
+    15.625% { opacity: 0; }
+    100% { opacity: 0; }
+  }
+
+  @keyframes heroFadeScale {
+    0% { transform: scale(1.05); }
+    3.125% { transform: scale(1.025); }
+    12.5% { transform: scale(1); }
+    15.625% { transform: scale(1.05); }
+    100% { transform: scale(1.05); }
+  }
+</style>

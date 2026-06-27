@@ -1,0 +1,88 @@
+---
+import '@/styles/global.css';
+import { canonicalUrl } from '@/lib/utils/helpers';
+import { sanityClient, urlFor } from '@lib/sanity';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonical?: string;
+  schema?: Record<string, any> | Record<string, any>[];
+  noIndex?: boolean;
+}
+
+// Fetch Global Settings for SEO Defaults
+const query = `*[_type == "siteSettings"][0]`;
+const siteSettings = await sanityClient.fetch(query).catch(() => null);
+
+const {
+  title = siteSettings?.defaultSeoTitle?.replace('{Page Title}', 'Home') || 'SQS Security | Protecting People, Property & Business',
+  description = siteSettings?.defaultMetaDescription || 'SQS Security provides professional security services in Southampton and across the UK. Specialising in Manned Guarding, Key Holding, CCTV, and Alarm Response.',
+  image = siteSettings?.defaultOgImage?.asset ? urlFor(siteSettings.defaultOgImage).url() : '/assets/branding/sqs-og-fallback.jpg', // Dynamic OG image or fallback
+  canonical = canonicalUrl(Astro.url.pathname),
+  schema,
+  noIndex = false,
+} = Astro.props;
+
+// Format title default suffix if not already present
+const siteName = siteSettings?.siteName || 'SQS Security Service';
+const formattedTitle = title.includes(siteName) 
+  ? title 
+  : `${title} | ${siteName}`;
+---
+
+<!DOCTYPE html>
+<html lang="en-GB" class="scroll-smooth">
+  <head>
+    <!-- Base Meta Tags -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png?v=6" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO Meta Tags -->
+    <title>{formattedTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Robot Crawling Controls -->
+    {noIndex ? (
+      <meta name="robots" content="noindex, nofollow" />
+    ) : (
+      <meta name="robots" content="index, follow" />
+    )}
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.url.origin)} />
+    <meta property="og:site_name" content="SQS Security" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonical} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={new URL(image, Astro.url.origin)} />
+
+    <!-- Dynamic Schema Integration (JSON-LD) -->
+    {
+      schema && (
+        <script
+          type="application/ld+json"
+          set:html={JSON.stringify(schema, null, 2)}
+        />
+      )
+    }
+
+    <!-- Preconnecting to Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  </head>
+  <body class="bg-white text-text font-sans selection:bg-gold/30 antialiased overflow-x-hidden">
+    <slot />
+  </body>
+</html>

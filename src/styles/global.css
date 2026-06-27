@@ -1,0 +1,215 @@
+/*
+ * SQS Security – Global Design System
+ * Tailwind CSS v4 (CSS-first configuration)
+ * ----------------------------------------
+ * All design tokens are defined as CSS custom properties here.
+ * Tailwind utilities extend these tokens automatically via @theme.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* ─────────────────────────────────────────
+   1. GOOGLE FONTS
+   ─────────────────────────────────────────  */
+
+/* ─────────────────────────────────────────
+   2. TAILWIND THEME TOKENS
+   ─────────────────────────────────────────  */
+@theme {
+  /* Fonts */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Outfit', system-ui, sans-serif;
+
+  /* Brand Colour Palette */
+  --color-navy:        #0B1F3A;
+  --color-navy-light:  #132d55;
+  --color-navy-dark:   #071429;
+  --color-blue:        #1D4ED8;
+  --color-blue-light:  #3B82F6;
+  --color-blue-dark:   #1E3A8A;
+  --color-gold:        #D4AF37;
+  --color-gold-light:  #E8CC6B;
+  --color-gold-dark:   #997B22; /* Darkened for WCAG AA 3:1 contrast on white */
+  --color-steel:       #64748B;
+  --color-steel-light: #8B9AB0; /* Darkened for WCAG AA 4.5:1 contrast on navy */
+  --color-steel-dark:  #475569;
+  --color-light:       #F8FAFC;
+  --color-white:       #FFFFFF;
+  --color-text:        #1E293B;
+  --color-text-muted:  #475569;
+  --color-emergency:   #DC2626;
+  --color-success:     #16A34A;
+  --color-warning:     #D97706;
+  --color-border:      #E2E8F0;
+  --color-ice-blue:    #BFD6EC;
+
+  /* Spacing Scale */
+  --spacing-section: 5rem;
+
+  /* Border Radius */
+  --radius-sm:  0.375rem;
+  --radius-md:  0.5rem;
+  --radius-lg:  0.75rem;
+  --radius-xl:  1rem;
+  --radius-2xl: 1.5rem;
+
+  /* Shadows */
+  --shadow-card:    0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+  --shadow-hover:   0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-gold:    0 0 0 3px rgb(212 175 55 / 0.3);
+  --shadow-navy:    0 0 0 3px rgb(11 31 58 / 0.3);
+}
+
+/* ─────────────────────────────────────────
+   3. CSS RESET & BASE STYLES
+   ─────────────────────────────────────────  */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background-color: var(--color-white);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─────────────────────────────────────────
+   4. TYPOGRAPHY SCALE
+   ─────────────────────────────────────────  */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-navy);
+}
+
+h1 { font-size: clamp(2rem, 5vw, 3.5rem); }
+h2 { font-size: clamp(1.75rem, 4vw, 2.75rem); }
+h3 { font-size: clamp(1.375rem, 3vw, 2rem); }
+h4 { font-size: clamp(1.125rem, 2vw, 1.5rem); }
+h5 { font-size: 1.125rem; }
+h6 { font-size: 1rem; }
+
+p {
+  color: var(--color-text-muted);
+  line-height: 1.75;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+/* ─────────────────────────────────────────
+   5. FOCUS STYLES (WCAG AA)
+   ─────────────────────────────────────────  */
+:focus-visible {
+  outline: 3px solid var(--color-gold);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* ─────────────────────────────────────────
+   6. UTILITY CLASSES
+   ─────────────────────────────────────────  */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+.section {
+  padding-block: var(--spacing-section);
+}
+
+.section-sm {
+  padding-block: 3rem;
+}
+
+.section-lg {
+  padding-block: 7rem;
+}
+
+/* Text gradient utility */
+.text-gradient-gold {
+  background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Gold divider underline */
+.heading-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.heading-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: var(--color-gold);
+  border-radius: 2px;
+}
+
+.heading-underline-center::after {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* ─────────────────────────────────────────
+   7. ANIMATIONS
+   ─────────────────────────────────────────  */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: scale(0.8); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* ─────────────────────────────────────────
+   8. SCROLLBAR
+   ─────────────────────────────────────────  */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-light); }
+::-webkit-scrollbar-thumb {
+  background: var(--color-steel-light);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--color-navy); }

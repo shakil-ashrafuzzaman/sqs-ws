@@ -1,0 +1,193 @@
+---
+import { sanityClient, urlFor } from '@lib/sanity';
+
+const currentYear = new Date().getFullYear();
+
+const siteQuery = `*[_type == "siteSettings"][0]{
+  siteName,
+  logoMain
+}`;
+
+const contactQuery = `*[_type == "contactInfo"][0]{
+  phone,
+  emergencyPhone,
+  email,
+  addressLine1,
+  addressLine2,
+  city,
+  county,
+  postcode
+}`;
+
+const [siteSettings, contactInfo] = await Promise.all([
+  sanityClient.fetch(siteQuery).catch(() => null),
+  sanityClient.fetch(contactQuery).catch(() => null)
+]);
+
+const phoneMain = contactInfo?.phone || '023 8012 3456';
+const phoneEmergency = contactInfo?.emergencyPhone || '0800 999 1234';
+const emailMain = contactInfo?.email || 'info@sqssecurity.co.uk';
+
+const addressLine1 = contactInfo?.addressLine1 || '86 Brintons Road';
+const addressLine2 = contactInfo?.addressLine2 || '';
+const city = contactInfo?.city || 'Southampton';
+const county = contactInfo?.county || 'Hampshire';
+const postcode = contactInfo?.postcode || 'SO14 0DB';
+
+const linksCompany = [
+  { name: 'About SQS', href: '/about' },
+  { name: 'Blogs', href: '/blog' },
+  { name: 'Case Studies', href: '/blog' },
+  { name: 'Accreditations', href: '/about#accreditations' },
+  { name: 'Careers', href: '/careers' },
+  { name: 'Contact Us', href: '/contact' },
+];
+
+const linksServices = [
+  { name: 'Security Guarding', href: '/services/security-guarding' },
+  { name: 'Waking Watch', href: '/services/waking-watch' },
+  { name: 'Construction Security', href: '/services/construction-security' },
+  { name: 'Dog Handler / K9', href: '/services/dog-handler-k9' },
+  { name: 'Warehouse Security', href: '/services/warehouse-security' },
+  { name: 'Office Security', href: '/services/office-security' },
+  { name: 'Void Property', href: '/services/void-property' },
+  { name: 'Emergency Cover', href: '/services/emergency-cover' },
+];
+
+const linksServiceAreas = [
+  { name: 'Southampton (HQ)', href: '/security-company-southampton' },
+  { name: 'London', href: '/security-company-london' },
+  { name: 'Portsmouth', href: '/security-company-portsmouth' },
+  { name: 'Winchester', href: '/security-company-winchester' },
+];
+---
+
+<footer class="bg-navy text-white pt-16 pb-8 border-t-4 border-gold">
+  <div class="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+    <!-- Brand / About Column -->
+    <div class="flex flex-col gap-6">
+      <a href="/" aria-label={`${siteSettings?.siteName || 'SQS Security'} Home`}>
+        {siteSettings?.logoMain?.asset ? (
+          <img 
+            src={urlFor(siteSettings.logoMain).height(200).url()} 
+            alt={siteSettings.logoMain.alt || siteSettings.siteName || 'SQS Security Logo'} 
+            class="h-12 md:h-16 w-auto object-contain"
+          />
+        ) : (
+          <span class="font-display font-black text-xl text-white uppercase tracking-wider">
+            {siteSettings?.siteName || 'SQS Security'}
+          </span>
+        )}
+      </a>
+      <p class="text-sm text-steel-light leading-relaxed">
+        SQS Security is an enterprise UK provider of security solutions. Protecting people, property, and businesses with SIA licensed guards and response services.
+      </p>
+
+    </div>
+
+    <!-- Services Link Column -->
+    <div>
+      <h3 class="font-display font-semibold text-lg text-white mb-6 relative after:absolute after:bottom-[-8px] after:left-0 after:w-10 after:h-0.5 after:bg-gold-dark" style="color: white !important;">Our Services</h3>
+      <ul class="flex flex-col gap-3 text-sm text-steel-light">
+        {linksServices.map((link) => (
+          <li>
+            <a href={link.href} class="hover:text-gold hover:translate-x-1 inline-block transition-all duration-200">
+              {link.name}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <!-- Company Link Column -->
+    <div>
+      <h3 class="font-display font-semibold text-lg text-white mb-6 relative after:absolute after:bottom-[-8px] after:left-0 after:w-10 after:h-0.5 after:bg-gold-dark" style="color: white !important;">Company</h3>
+      <ul class="flex flex-col gap-3 text-sm text-steel-light">
+        {linksCompany.map((link) => (
+          <li>
+            <a href={link.href} class="hover:text-gold hover:translate-x-1 inline-block transition-all duration-200">
+              {link.name}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <!-- Contact & Head Office Column -->
+    <div>
+      <h3 class="font-display font-semibold text-lg text-white mb-6 relative after:absolute after:bottom-[-8px] after:left-0 after:w-10 after:h-0.5 after:bg-gold-dark" style="color: white !important;">Head Office</h3>
+      <div class="flex flex-col gap-4 text-sm text-steel-light leading-relaxed">
+        <p class="flex gap-2 items-start">
+          <a 
+            href={`https://maps.google.com/?q=${encodeURIComponent('SQS Security, ' + addressLine1 + ', ' + city + ', ' + postcode)}`} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="flex gap-2 hover:text-gold transition-colors group"
+          >
+            <svg class="w-5 h-5 text-gold shrink-0 group-hover:scale-110 transition-transform mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span>
+              SQS Security,<br />
+              {addressLine1}{addressLine2 ? `, ${addressLine2}` : ''},<br />
+              {city}, {county}, {postcode}
+            </span>
+          </a>
+        </p>
+        <p class="flex gap-2 items-center">
+          <a href={`tel:${phoneMain.replace(/\s+/g, '')}`} class="flex gap-2 items-center hover:text-gold transition-colors group">
+            <svg class="w-5 h-5 text-gold shrink-0 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+            <span>{phoneMain}</span>
+          </a>
+        </p>
+        <p class="flex gap-2 items-center">
+          <a href={`mailto:${emailMain}`} class="flex gap-2 items-center hover:text-gold transition-colors group">
+            <svg class="w-5 h-5 text-gold shrink-0 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 00-2 2z" />
+            </svg>
+            <span>{emailMain}</span>
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trust Indicator Badges strip -->
+  <div class="border-t border-navy-light/60 py-8">
+    <div class="container flex flex-wrap items-center justify-between gap-6">
+      <div class="flex flex-wrap items-center gap-6 opacity-60 hover:opacity-90 transition-opacity">
+        <span class="text-xs uppercase tracking-wider font-semibold text-steel-light">Accredited by:</span>
+        <div class="flex flex-wrap items-center gap-4 text-xs font-bold font-display text-white">
+          <span class="border border-white/20 px-2 py-1 rounded">SIA Approved</span>
+          <span class="border border-white/20 px-2 py-1 rounded">ISO 9001</span>
+          <span class="border border-white/20 px-2 py-1 rounded">ISO 14001</span>
+          <span class="border border-white/20 px-2 py-1 rounded">SafeContractor</span>
+        </div>
+      </div>
+      
+      <!-- Service Areas Shortcut links -->
+      <div class="text-xs text-steel-light flex flex-wrap gap-x-4 gap-y-1">
+        <span class="font-semibold">Service Coverage:</span>
+        {linksServiceAreas.map((area) => (
+          <a href={area.href} class="hover:text-gold transition-colors">{area.name}</a>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- Legal info & Copyright -->
+  <div class="border-t border-navy-light/30 pt-8 text-xs text-steel-light text-center md:text-left">
+    <div class="container flex flex-col md:flex-row justify-between gap-4">
+      <p>
+        &copy; {currentYear} SQS Security. All Rights Reserved. Protecting People, Property & Business.
+      </p>
+      <p class="flex flex-wrap justify-center md:justify-end gap-x-4 gap-y-1">
+        <a href="/privacy-policy" class="hover:text-gold transition-colors">Privacy Policy</a>
+        <a href="/terms-and-conditions" class="hover:text-gold transition-colors">Terms of Use</a>
+      </p>
+    </div>
+  </div>
+</footer>

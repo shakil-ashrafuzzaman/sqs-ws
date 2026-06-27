@@ -1,0 +1,63 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import Card from '@components/common/Card.astro';
+import Badge from '@components/common/Badge.astro';
+import Button from '@components/common/Button.astro';
+
+const industries = [
+  { slug: 'construction-security', title: 'Construction Security', icon: '🏗️', excerpt: 'Protecting sites, heavy machinery, and materials from theft and vandalism.' },
+  { slug: 'logistics-security', title: 'Logistics Security', icon: '🚛', excerpt: 'Securing supply chains, distribution centers, and high-value cargo transport.' },
+  { slug: 'retail-security', title: 'Retail Security', icon: '🏪', excerpt: 'Loss prevention, store detectives, and customer safety in high-street environments.' },
+  { slug: 'healthcare-security', title: 'Healthcare Security', icon: '🏥', excerpt: 'Safeguarding hospitals, clinics, staff, and vulnerable patients.' },
+  { slug: 'maritime-security', title: 'Maritime Security', icon: '⚓', excerpt: 'ISPS Code compliant port security, cargo auditing, and border control.' },
+  { slug: 'education-security', title: 'Education Security', icon: '🎓', excerpt: 'Campus security, student safety, and access control for schools and universities.' },
+  { slug: 'corporate-security', title: 'Corporate Security', icon: '🏢', excerpt: 'Concierge-grade reception security and executive protection for corporate offices.' },
+];
+---
+
+<PageLayout 
+  title="Industries We Serve | SQS Security"
+  description="Specialized security solutions for UK industries including construction, logistics, retail, maritime, and corporate sectors."
+>
+  <!-- Hero Section -->
+  <section class="bg-navy py-20 text-white relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(19,45,85,0.8)_0%,rgba(7,20,41,1)_100%)]"></div>
+    <div class="container relative z-10 text-center max-w-4xl flex flex-col items-center gap-6 animate-fade-in-up">
+      <Badge variant="gold">Tailored Sector Solutions</Badge>
+      <h1 class="font-display font-black text-4xl md:text-5xl lg:text-6xl text-white">
+        Industries We <span class="text-gradient-gold">Protect</span>
+      </h1>
+      <p class="text-lg md:text-xl text-steel-light">
+        Every industry faces unique security challenges. We design bespoke, compliant protection strategies tailored exactly to your operational environment.
+      </p>
+    </div>
+  </section>
+
+  <!-- Industries Grid -->
+  <section class="section bg-light">
+    <div class="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {industries.map((ind) => (
+        <Card class="flex flex-col h-full bg-white group hover:border-gold/50 transition-colors">
+          <div class="flex flex-col gap-4">
+            <span class="text-5xl">{ind.icon}</span>
+            <h2 class="font-display font-bold text-2xl text-navy">{ind.title}</h2>
+            <p class="text-steel-dark flex-grow">{ind.excerpt}</p>
+          </div>
+          <div class="mt-6 pt-6 border-t border-border">
+            <Button href={`/industries/${ind.slug}`} variant="outline" class="w-full justify-center group-hover:bg-navy group-hover:text-white transition-colors">
+              View Industry Solutions
+            </Button>
+          </div>
+        </Card>
+      ))}
+    </div>
+  </section>
+
+  <!-- Compliance Banner -->
+  <section class="bg-white py-12 border-y border-border">
+    <div class="container text-center max-w-3xl flex flex-col items-center gap-4">
+      <h3 class="font-display font-bold text-xl text-navy">Fully Compliant Security Standards</h3>
+      <p class="text-steel-dark">All our industry security services strictly adhere to UK legislation, including rigorous BS7858 background vetting for all staff and SIA Approved Contractor standards.</p>
+    </div>
+  </section>
+</PageLayout>

@@ -1,0 +1,327 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import Badge from '@components/common/Badge.astro';
+import Card from '@components/common/Card.astro';
+import Button from '@components/common/Button.astro';
+import { sanityClient, urlFor } from '@lib/sanity';
+import { PortableText } from 'astro-portabletext';
+
+export async function getStaticPaths() {
+  const blogQuery = `*[_type == "blogPost"] | order(publishedAt desc) {
+    "slug": slug.current,
+    "type": _type,
+    title,
+    excerpt,
+    body,
+    "category": categories[0]->title,
+    publishedAt,
+    featuredImage,
+    author->{name, role, bio}
+  }`;
+  
+  const caseStudyQuery = `*[_type == "caseStudy"] | order(_createdAt desc) {
+    "slug": slug.current,
+    "type": _type,
+    title,
+    "excerpt": challenge,
+    "body": solution,
+    "category": "Case Study",
+    "publishedAt": _createdAt,
+    "featuredImage": mainImage,
+    "author": {"name": client}
+  }`;
+
+  const blogPosts = await sanityClient.fetch(blogQuery).catch(() => []);
+  const caseStudies = await sanityClient.fetch(caseStudyQuery).catch(() => []);
+
+  const fallbackBlogs = [
+    {
+      slug: 'case-study-construction-site-southampton',
+      type: 'caseStudy',
+      title: 'Securing a £50M Commercial Development in Southampton',
+      excerpt: 'The client faced continuous theft of high-value materials. We deployed 24/7 manned guarding, mobile CCTV towers, and access control.',
+      category: 'Case Study',
+      publishedAt: new Date().toISOString(),
+      featuredImageFallback: 'https://images.unsplash.com/photo-1541888001648-4389025e6db4?w=800&auto=format&fit=crop&q=80',
+      author: { name: 'BuildTrust Construction', role: 'Client', bio: 'Commercial Property Developer' },
+      body: [
+        { _type: 'block', style: 'h3', children: [{ _type: 'span', text: 'The Challenge' }] },
+        { _type: 'block', style: 'normal', children: [{ _type: 'span', text: 'A major construction site in Southampton was experiencing recurring theft of high-value raw materials, copper wire, and tools. Standard perimeter fencing was proving insufficient, resulting in project delays and financial losses.' }] },
+        { _type: 'block', style: 'h3', children: [{ _type: 'span', text: 'Our Solution' }] },
+        { _type: 'block', style: 'normal', children: [{ _type: 'span', text: 'SQS Security implemented a multi-layered security strategy. We deployed rapid-deployment mobile CCTV towers with thermal imaging, monitored 24/7 by our control room. We also stationed SIA-licensed manned guards at key access points and initiated randomized K9 patrols during non-operational hours.' }] },
+        { _type: 'block', style: 'h3', children: [{ _type: 'span', text: 'Results' }] },
+        { _type: 'block', style: 'normal', children: [{ _type: 'span', text: '• 100% reduction in theft incidents within the first month.\n• Enhanced site health and safety compliance.\n• Project completed on time without further security-related disruptions.' }] }
+      ]
+    },
+    {
+      slug: 'case-study-logistics-hub-cctv',
+      type: 'caseStudy',
+      title: 'Upgrading Perimeter Security for a National Logistics Hub',
+      excerpt: 'Frequent unauthorized access attempts during night shifts. SQS installed long-range thermal CCTV and initiated rapid response mobile patrols.',
+      category: 'Case Study',
+      publishedAt: new Date(Date.now() - 86400000 * 10).toISOString(),
+      featuredImageFallback: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&auto=format&fit=crop&q=80',
+      author: { name: 'Global Logistics Network', role: 'Client', bio: 'National Distribution Center' },
+      body: [
+        { _type: 'block', style: 'h3', children: [{ _type: 'span', text: 'The Challenge' }] },
+        { _type: 'block', style: 'normal', children: [{ _type: 'span', text: 'A massive logistics and distribution center faced challenges with perimeter breaches and cargo tampering. The vast size of the facility made manual guarding across the entire perimeter cost-prohibitive.' }] },
+        { _type: 'block', style: 'h3', children: [{ _type: 'span', text: 'Our Solution' }] },
+        { _type: 'block', style: 'normal', children: [{ _type: 'span', text: 'We designed a tech-first approach. SQS installed a network of AI-powered long-range CCTV cameras integrated with perimeter intrusion detection systems (PIDS). When a breach was detected, our mobile patrol units were immediately dispatched.' }] },
+        { _type: 'block', style: 'h3', children: [{ _type: 'span', text: 'Results' }] },
+        { _type: 'block', style: 'normal', children: [{ _type: 'span', text: '• Intrusion detection time reduced to under 3 seconds.\n• 40% reduction in overall security costs compared to full static guarding.\n• Zero successful cargo thefts since implementation.' }] }
+      ]
+    },
+    {
+      slug: 'importance-of-sia-approved-contractors',
+      type: 'blogPost',
+      title: 'The Importance of SIA Approved Contractors',
+      excerpt: 'Why choosing an SIA Approved Contractor is critical for ensuring high-quality, legally compliant security services for your business.',
+      category: 'Compliance',
+      publishedAt: new Date(Date.now() - 86400000 * 1).toISOString(),
+      featuredImageFallback: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800&auto=format&fit=crop&q=80',
+      author: { name: 'SQS Security Expert', role: 'Security Consultant', bio: 'Expert in UK security compliance and SIA regulations.' },
+      body: [
+        { _type: 'block', style: 'normal', children: [{ _type: 'span', text: 'When securing your business, cutting corners is never an option. Partnering with an SIA (Security Industry Authority) Approved Contractor guarantees that your security provider meets the highest standards of professionalism and compliance. SQS Security is proud to hold this accreditation, ensuring our operatives are fully vetted, extensively trained, and legally compliant.' }] },
+        { _type: 'block', style: 'normal', children: [{ _type: 'span', text: 'An Approved Contractor Status (ACS) is only awarded to companies that undergo rigorous independent assessments. By choosing an ACS accredited firm, you are protecting your assets, your reputation, and most importantly, your people.' }] }
+      ]
+    },
+    {
+      slug: '5-reasons-you-need-waking-watch',
+      type: 'blogPost',
+      title: '5 Reasons Your Property Needs a Waking Watch',
+      excerpt: 'Discover why a waking watch is an essential fire safety measure for residential and commercial buildings awaiting cladding remediation or fire system upgrades.',
+      category: 'Fire Safety',
+      publishedAt: new Date(Date.now() - 86400000 * 5).toISOString(),
+      featuredImageFallback: 'https://images.unsplash.com/photo-1541888001648-4389025e6db4?w=800&auto=format&fit=crop&q=80',
+      author: { name: 'SQS Operations Team', role: 'Operations Manager', bio: 'Overseeing rapid deployment of fire safety and emergency response teams.' },
+      body: [
+        { _type: 'block', style: 'normal', children: [{ _type: 'span', text: 'Fire safety regulations are stricter than ever. For buildings with compromised cladding or failing fire alarm systems, a Waking Watch provides immediate, 24/7 human surveillance. Our highly trained fire wardens continuously patrol the premises, ensuring any sign of fire is detected instantly.' }] },
+        { _type: 'block', style: 'normal', children: [{ _type: 'span', text: 'A Waking Watch not only ensures regulatory compliance but provides peace of mind to residents and building owners alike. From coordinating safe evacuations to liaising with emergency services, our wardens are the frontline of fire safety.' }] }
+      ]
+    },
+    {
+      slug: 'benefits-of-mobile-security-patrols',
+      type: 'blogPost',
+      title: 'The Benefits of Mobile Security Patrols',
+      excerpt: 'Explore how mobile security patrols provide a cost-effective, highly visible deterrent against crime and unauthorized access for large commercial sites.',
+      category: 'Security Solutions',
+      publishedAt: new Date(Date.now() - 86400000 * 12).toISOString(),
+      featuredImageFallback: 'https://images.unsplash.com/photo-1618371690240-e0d46eead4b8?w=800&auto=format&fit=crop&q=80',
+      author: { name: 'SQS Mobile Unit', role: 'Patrol Supervisor', bio: 'Specialist in mobile security operations and rapid response protocols.' },
+      body: [
+        { _type: 'block', style: 'normal', children: [{ _type: 'span', text: 'Not every site requires a static guard presence 24/7. Mobile security patrols offer a dynamic, unpredictable, and highly cost-effective alternative. By conducting randomized patrols throughout the night or weekend, mobile units create a strong visual deterrent against vandalism, theft, and squatting.' }] },
+        { _type: 'block', style: 'normal', children: [{ _type: 'span', text: 'In addition to external perimeter checks, mobile guards can perform internal lock-down procedures, monitor environmental systems, and respond rapidly to alarm activations. It is a flexible solution tailored to the unique risks of your site.' }] }
+      ]
+    },
+    {
+      slug: 'cost-to-hire-a-security-guard-uk',
+      title: 'How Much Does It Cost to Hire a Security Guard in the UK?',
+      excerpt: 'Understanding the pricing models and factors that influence the cost of hiring professional, SIA-licensed security guards for your business.',
+      category: 'Security Advice',
+      publishedAt: new Date(Date.now() - 86400000 * 15).toISOString(),
+      featuredImageFallback: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=800&auto=format&fit=crop&q=80',
+      author: { name: 'SQS Commercial Team', role: 'Commercial Director', bio: 'Expert in security service pricing and commercial contracts.' },
+      body: [
+        { _type: 'block', style: 'normal', children: [{ _type: 'span', text: 'When budgeting for security, one of the most common questions we receive is: "How much does it cost to hire a security guard?" The answer depends on several factors including the type of security required, the location, the duration of the contract, and the specific skills needed (e.g., K9 handling or medical training).' }] },
+        { _type: 'block', style: 'normal', children: [{ _type: 'span', text: 'On average, standard manned guarding rates in the UK can vary, but it is crucial to remember that unusually low rates often mean compromised quality or non-compliance with SIA regulations. Investing in a reputable, ACS-accredited provider like SQS Security ensures you get reliable, trained professionals who truly protect your assets.' }] }
+      ]
+    },
+    {
+      slug: 'duties-and-responsibilities-of-a-security-guard',
+      title: 'What Are the Key Duties of a Professional Security Guard?',
+      excerpt: 'A detailed look into the daily responsibilities, from access control to emergency response, that define a professional security officer.',
+      category: 'Security Solutions',
+      publishedAt: new Date(Date.now() - 86400000 * 20).toISOString(),
+      featuredImageFallback: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&auto=format&fit=crop&q=80',
+      author: { name: 'SQS Training Team', role: 'Head of Training', bio: 'Responsible for the training and development of SIA licensed guards.' },
+      body: [
+        { _type: 'block', style: 'normal', children: [{ _type: 'span', text: 'The modern security guard is much more than just a physical presence. Their duties encompass a wide range of responsibilities critical to maintaining a safe environment. This includes rigorous access control, regular perimeter patrols, monitoring CCTV feeds, and maintaining detailed incident logs.' }] },
+        { _type: 'block', style: 'normal', children: [{ _type: 'span', text: 'Furthermore, security officers are often the first responders in an emergency. Whether managing a fire evacuation, providing first aid, or de-escalating a conflict, their extensive training equips them to handle high-pressure situations professionally and calmly.' }] }
+      ]
+    },
+    {
+      slug: 'signs-your-business-needs-security',
+      title: '5 Signs Your Business Needs Professional Security',
+      excerpt: 'Is your business at risk? Learn the top indicators that it is time to invest in professional manned guarding or mobile patrols.',
+      category: 'Business Protection',
+      publishedAt: new Date(Date.now() - 86400000 * 25).toISOString(),
+      featuredImageFallback: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&auto=format&fit=crop&q=80',
+      author: { name: 'SQS Risk Assessment', role: 'Risk Analyst', bio: 'Specializing in corporate risk management and security audits.' },
+      body: [
+        { _type: 'block', style: 'normal', children: [{ _type: 'span', text: 'Many businesses wait until after a major incident to hire security. However, recognizing the early signs can save you significant financial loss and protect your staff. If you are experiencing increased local crime rates, frequent unauthorized access, or employee safety concerns, it is time to act.' }] },
+        { _type: 'block', style: 'normal', children: [{ _type: 'span', text: 'Other signs include expanding your operations, holding valuable inventory on-site, or hosting frequent high-profile visitors. A professional risk assessment from SQS Security can identify vulnerabilities you might have missed and propose tailored solutions to mitigate them.' }] }
+      ]
+    },
+    {
+      slug: 'how-to-hire-event-security',
+      title: 'The Ultimate Guide to Hiring Event Security Guards',
+      excerpt: 'Planning an event? Learn the essential steps for assessing risks, determining guard ratios, and hiring the right event security team.',
+      category: 'Event Security',
+      publishedAt: new Date(Date.now() - 86400000 * 30).toISOString(),
+      featuredImageFallback: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&auto=format&fit=crop&q=80',
+      author: { name: 'SQS Events Division', role: 'Event Security Manager', bio: 'Expert in crowd control and large-scale event security planning.' },
+      body: [
+        { _type: 'block', style: 'normal', children: [{ _type: 'span', text: 'From corporate conferences to music festivals, effective event security requires meticulous planning. The first step is always a comprehensive site survey and risk assessment. You must consider crowd demographics, venue layout, and potential emergency scenarios.' }] },
+        { _type: 'block', style: 'normal', children: [{ _type: 'span', text: 'When hiring event guards, ensure they are SIA licensed and trained in crowd management and conflict resolution. SQS Security provides bespoke event security teams that integrate seamlessly with your event organizers, ensuring a safe and enjoyable experience for all attendees.' }] }
+      ]
+    },
+    {
+      slug: 'cctv-monitoring-vs-manned-guarding',
+      title: 'CCTV Monitoring vs. Manned Guarding: Which is Best?',
+      excerpt: 'Comparing the benefits of electronic surveillance systems with the physical presence of professional security guards.',
+      category: 'Security Solutions',
+      publishedAt: new Date(Date.now() - 86400000 * 35).toISOString(),
+      featuredImageFallback: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&auto=format&fit=crop&q=80',
+      author: { name: 'SQS Technology Integration', role: 'Systems Specialist', bio: 'Integrating physical security with cutting-edge surveillance tech.' },
+      body: [
+        { _type: 'block', style: 'normal', children: [{ _type: 'span', text: 'The debate between investing in CCTV monitoring versus physical manned guarding is common. CCTV provides excellent forensic evidence and remote oversight, acting as a strong psychological deterrent. However, cameras cannot physically intervene to stop a crime in progress or assist an injured person.' }] },
+        { _type: 'block', style: 'normal', children: [{ _type: 'span', text: 'The most robust security strategies do not choose one over the other; they integrate both. Manned guards can instantly verify and respond to CCTV alerts, while cameras act as a force multiplier for guards on patrol. SQS Security specializes in this hybrid approach, providing maximum protection for your premises.' }] }
+      ]
+    }
+  ];
+
+  const allPosts = [...(blogPosts || []), ...(caseStudies || []), ...fallbackBlogs];
+
+  return allPosts.map((post: any) => {
+    // Grab some related posts (filtering out the current one)
+    const relatedPosts = allPosts.filter((p: any) => p.slug !== post.slug).slice(0, 3);
+    return {
+      params: { slug: post.slug },
+      props: { post, relatedPosts },
+    };
+  });
+}
+
+const { post, relatedPosts } = Astro.props;
+
+// Format Date
+const formattedDate = new Date(post.publishedAt || new Date()).toLocaleDateString('en-GB', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+
+// JSON-LD Article Schema
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": `https://sqssecurity.co.uk/blog/${post.slug}`
+  },
+  "headline": post.title,
+  "description": post.excerpt,
+  "image": post.featuredImage?.asset ? urlFor(post.featuredImage).url() : (post.featuredImageFallback || "https://sqssecurity.co.uk/blog-placeholder.jpg"),
+  "author": {
+    "@type": "Person",
+    "name": post.author?.name || 'SQS Security'
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "SQS Security",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://sqssecurity.co.uk/logo.png"
+    }
+  },
+  "datePublished": post.publishedAt || new Date().toISOString(),
+  "dateModified": post.publishedAt || new Date().toISOString()
+};
+---
+
+<PageLayout 
+  title={`${post.title} | SQS Security Blog`}
+  description={post.excerpt}
+>
+  <!-- SEO Schema Injection -->
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+
+  <!-- Article Header -->
+  <section class="bg-navy-light py-16 md:py-24 text-white relative">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(19,45,85,0.8)_0%,rgba(7,20,41,1)_100%)]"></div>
+    <div class="container relative z-10 max-w-4xl flex flex-col gap-6 text-center items-center animate-fade-in-up">
+      <div class="flex items-center gap-2 mb-2">
+        <a href="/blog" class="text-steel-light hover:text-white transition-colors text-sm font-semibold">
+          &larr; Back to Blog
+        </a>
+      </div>
+      <Badge variant="gold">{post.category || 'Updates'}</Badge>
+      <h1 class="font-display font-black text-3xl md:text-5xl lg:text-6xl text-white leading-tight">
+        {post.title}
+      </h1>
+      
+      <!-- Post Meta -->
+      <div class="flex items-center gap-6 mt-6 pt-6 border-t border-white/10 text-sm text-steel-light">
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+          <span class="font-bold">{post.author?.name || 'SQS Security'}</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+          <span>{formattedDate}</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          <span>5 min read</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Article Body -->
+  <section class="section bg-white">
+    <div class="container max-w-3xl">
+      <!-- Tailwind Typography plugin (.prose) applied here -->
+      <article class="prose prose-lg prose-slate prose-headings:font-display prose-headings:font-bold prose-headings:text-navy prose-a:text-blue hover:prose-a:text-navy prose-img:rounded-xl mx-auto">
+        {(post.featuredImageFallback || post.featuredImage?.asset) && (
+          <img 
+            src={post.featuredImage?.asset ? urlFor(post.featuredImage).width(1200).height(600).url() : post.featuredImageFallback} 
+            alt={post.title} 
+            class="w-full h-auto rounded-xl mb-8 shadow-md"
+          />
+        )}
+        {post.body ? <PortableText value={post.body} /> : <p>No content found.</p>}
+      </article>
+      
+      <!-- Author Profile Card -->
+      <div class="mt-16 pt-8 border-t border-border">
+        <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 bg-light p-6 rounded-xl border border-border">
+          <div class="w-20 h-20 rounded-full bg-navy text-white flex items-center justify-center font-bold text-2xl uppercase shrink-0">
+            {(post.author?.name || 'S').charAt(0)}
+          </div>
+          <div class="flex flex-col text-center sm:text-left">
+            <span class="text-xs uppercase font-bold tracking-wider text-steel mb-1">Written by</span>
+            <h3 class="font-display font-bold text-xl text-navy">{post.author?.name || 'SQS Security'}</h3>
+            {post.author?.role && <span class="text-sm font-semibold text-gold-dark mb-3">{post.author.role}</span>}
+            {post.author?.bio && <p class="text-steel-dark text-sm leading-relaxed">{post.author.bio}</p>}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related Posts -->
+  {relatedPosts.length > 0 && (
+    <section class="bg-light py-16 border-t border-border">
+      <div class="container max-w-5xl">
+        <div class="flex items-center justify-between mb-8">
+          <h2 class="font-display font-bold text-3xl text-navy">Related Articles</h2>
+          <Button href="/blog" variant="outline">View All</Button>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {relatedPosts.map((rel: any) => (
+            <a href={`/blog/${rel.slug}`} class="group">
+              <Card class="bg-white hover:border-gold/50 transition-colors h-full flex flex-col p-6">
+                <Badge variant="secondary" class="self-start mb-4 text-[10px]">{rel.category}</Badge>
+                <h3 class="font-display font-bold text-xl text-navy group-hover:text-gold-dark transition-colors mb-3">{rel.title}</h3>
+                <p class="text-steel-dark text-sm flex-grow line-clamp-2">{rel.excerpt}</p>
+                <span class="text-xs font-semibold text-blue mt-4 inline-block group-hover:text-navy transition-colors">Read Article &rarr;</span>
+              </Card>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</PageLayout>

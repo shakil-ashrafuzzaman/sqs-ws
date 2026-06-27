@@ -1,0 +1,31 @@
+---
+interface Props {
+  variant?: 'primary' | 'secondary' | 'gold' | 'success' | 'warning' | 'danger' | 'neutral';
+  class?: string;
+  id?: string;
+}
+
+const {
+  variant = 'primary',
+  class: className = '',
+  id,
+} = Astro.props;
+
+const baseStyles = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-semibold rounded-full uppercase tracking-wider border';
+
+const variantStyles = {
+  primary: 'bg-navy/5 border-navy/20 text-navy',
+  secondary: 'bg-blue/5 border-blue/20 text-blue',
+  gold: 'bg-gold/10 border-gold/30 text-gold-dark',
+  success: 'bg-success/10 border-success/30 text-success',
+  warning: 'bg-warning/10 border-warning/30 text-warning',
+  danger: 'bg-emergency/10 border-emergency/30 text-emergency',
+  neutral: 'bg-light border-border text-steel-dark',
+};
+
+const classes = `${baseStyles} ${variantStyles[variant]} ${className}`;
+---
+
+<span id={id} class={classes}>
+  <slot />
+</span>
