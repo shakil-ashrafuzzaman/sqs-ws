@@ -24,15 +24,15 @@ const [siteSettings, contactInfo] = await Promise.all([
   sanityClient.fetch(contactQuery).catch(() => null)
 ]);
 
-const phoneMain = contactInfo?.phone || '023 8012 3456';
+const phoneMain = '0333 444 4045';
 const phoneEmergency = contactInfo?.emergencyPhone || '0800 999 1234';
 const emailMain = contactInfo?.email || 'info@sqssecurity.co.uk';
 
-const addressLine1 = contactInfo?.addressLine1 || '86 Brintons Road';
-const addressLine2 = contactInfo?.addressLine2 || '';
-const city = contactInfo?.city || 'Southampton';
-const county = contactInfo?.county || 'Hampshire';
-const postcode = contactInfo?.postcode || 'SO14 0DB';
+const addressLine1 = '104 Graham Rd';
+const addressLine2 = '';
+const city = 'Southampton';
+const county = 'Hampshire';
+const postcode = 'SO14 0AZ';
 
 const linksCompany = [
   { name: 'About SQS', href: '/about' },
@@ -75,12 +75,12 @@ const linksServiceAreas = [
           />
         ) : (
           <span class="font-display font-black text-xl text-white uppercase tracking-wider">
-            {siteSettings?.siteName || 'SQS Security'}
+            {siteSettings?.siteName || 'SQS Security Service'}
           </span>
         )}
       </a>
-      <p class="text-sm text-steel-light leading-relaxed">
-        SQS Security is an enterprise UK provider of security solutions. Protecting people, property, and businesses with SIA licensed guards and response services.
+      <p class="text-sm text-gray-200 leading-relaxed font-medium">
+        SQS Security Service is a premier UK provider of comprehensive security solutions. We are dedicated to protecting people, property, and businesses with our elite team of SIA-licensed officers and rapid response personnel.
       </p>
 
     </div>
@@ -116,10 +116,10 @@ const linksServiceAreas = [
     <!-- Contact & Head Office Column -->
     <div>
       <h3 class="font-display font-semibold text-lg text-white mb-6 relative after:absolute after:bottom-[-8px] after:left-0 after:w-10 after:h-0.5 after:bg-gold-dark" style="color: white !important;">Head Office</h3>
-      <div class="flex flex-col gap-4 text-sm text-steel-light leading-relaxed">
+      <div class="flex flex-col gap-4 text-sm text-white leading-relaxed font-semibold">
         <p class="flex gap-2 items-start">
           <a 
-            href={`https://maps.google.com/?q=${encodeURIComponent('SQS Security, ' + addressLine1 + ', ' + city + ', ' + postcode)}`} 
+            href={`https://maps.google.com/?q=${encodeURIComponent('SQS Security Service, ' + addressLine1 + ', ' + city + ', ' + postcode)}`} 
             target="_blank" 
             rel="noopener noreferrer" 
             class="flex gap-2 hover:text-gold transition-colors group"
@@ -129,7 +129,7 @@ const linksServiceAreas = [
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
             <span>
-              SQS Security,<br />
+              SQS Security Service,<br />
               {addressLine1}{addressLine2 ? `, ${addressLine2}` : ''},<br />
               {city}, {county}, {postcode}
             </span>

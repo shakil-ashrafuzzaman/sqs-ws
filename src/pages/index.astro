@@ -33,11 +33,11 @@ const [siteSettings, fetchedServices, contactInfo] = await Promise.all([
 ]);
 
 const phoneEmergency = contactInfo?.emergencyPhone || '08009991234';
-const addressLine1 = contactInfo?.addressLine1 || '86 Brintons Road';
-const addressLine2 = contactInfo?.addressLine2 || '';
-const city = contactInfo?.city || 'Southampton';
-const county = contactInfo?.county || 'Hampshire';
-const postcode = contactInfo?.postcode || 'SO14 0DB';
+const addressLine1 = '104 Graham Rd';
+const addressLine2 = '';
+const city = 'Southampton';
+const county = 'Hampshire';
+const postcode = 'SO14 0AZ';
 const latitude = contactInfo?.latitude || 50.9084803;
 const longitude = contactInfo?.longitude || -1.4024222;
 
@@ -253,9 +253,9 @@ const pageSchema = [organizationSchema];
   <!-- 2. Welcome Section -->
   <section class="bg-gold-light py-24 text-navy-dark">
     <div class="container max-w-4xl text-center flex flex-col gap-8">
-      <h2 class="font-display font-black text-4xl md:text-5xl uppercase tracking-wide">Welcome to SQS Security</h2>
+      <h2 class="font-display font-black text-4xl md:text-5xl uppercase tracking-wide">Welcome to SQS Security Service</h2>
       <p class="text-lg md:text-xl font-medium leading-relaxed">
-        At SQS Security, we specialise in delivering high-quality building support and security services across commercial and residential settings. Our experienced team provides professional personnel for a range of roles including Manned Guarding, Concierge, CCTV Monitoring, and Key Holding. All staff are fully trained and SIA-licensed, ensuring that each service is tailored to meet the unique needs of our clients.
+        At SQS Security Service, we specialise in delivering high-quality, dependable security solutions across commercial, industrial, and residential settings. Our experienced team provides professional personnel for a comprehensive range of roles, including Security Guarding, Waking Watch, Construction Site Security, and K9 Dog Handlers. All staff are fully trained and SIA-licensed, ensuring that each service—whether it's rapid Emergency Cover or Void Property protection—is expertly tailored to meet the unique needs of our clients.
       </p>
     </div>
   </section>
@@ -317,31 +317,47 @@ const pageSchema = [organizationSchema];
   </section>
 
   <!-- 4. Accreditations Trust Indicators -->
-  <section class="bg-light py-16 border-y border-border">
-    <div class="container flex flex-col gap-8">
-      <p class="text-lg md:text-xl uppercase tracking-widest text-center text-navy font-black drop-shadow-sm">Accreditations & Certifications</p>
-      <div class="flex flex-wrap justify-center items-center gap-10 md:gap-20 opacity-80 hover:opacity-100 transition-opacity">
-        <div class="flex flex-col items-center gap-2">
-          <span class="font-display font-black text-navy text-2xl tracking-wider border-2 border-navy px-4 py-2 rounded">SIA</span>
-          <span class="text-[10px] uppercase font-bold text-steel">Approved Contractor</span>
+  <section class="relative bg-white py-20 border-t border-border overflow-hidden">
+    <!-- Subtle background pattern or gradient -->
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(212,175,55,0.05)_0%,transparent_70%)] pointer-events-none"></div>
+    <div class="container relative z-10 flex flex-col items-center gap-12">
+      <div class="text-center flex flex-col items-center gap-3">
+        <h2 class="font-display font-black text-2xl md:text-3xl uppercase tracking-widest text-navy drop-shadow-sm">
+          Accreditations & <span class="text-gradient-gold">Certifications</span>
+        </h2>
+        <div class="w-16 h-1 bg-gold-light rounded-full"></div>
+      </div>
+      
+      <div class="flex flex-wrap justify-center items-stretch gap-6 md:gap-10 w-full max-w-4xl mx-auto">
+        <!-- SIA Badge -->
+        <div class="group flex flex-col items-center justify-center p-6 bg-white border border-border rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_30px_rgba(212,175,55,0.15)] hover:border-gold/50 transition-all duration-300 transform hover:-translate-y-1 w-[160px] md:w-[220px]">
+          <span class="font-display font-black text-navy text-3xl md:text-4xl tracking-wider mb-2 group-hover:text-gold-dark transition-colors">SIA</span>
+          <div class="h-0.5 w-8 bg-border group-hover:bg-gold transition-colors mb-3"></div>
+          <span class="text-[10px] md:text-xs uppercase font-bold text-steel text-center tracking-widest">Approved Contractor</span>
         </div>
-        <div class="flex flex-col items-center gap-2">
-          <span class="font-display font-bold text-navy text-lg border-2 border-gold-dark px-4 py-2 rounded">ISO 9001</span>
-          <span class="text-[10px] uppercase font-bold text-steel">Quality Assured</span>
+        
+        <!-- ISO 9001 Badge -->
+        <div class="group flex flex-col items-center justify-center p-6 bg-white border border-border rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_30px_rgba(212,175,55,0.15)] hover:border-gold/50 transition-all duration-300 transform hover:-translate-y-1 w-[160px] md:w-[220px]">
+          <span class="font-display font-black text-navy text-xl md:text-2xl tracking-wider mb-2 group-hover:text-gold-dark transition-colors mt-2">ISO 9001</span>
+          <div class="h-0.5 w-8 bg-border group-hover:bg-gold transition-colors mb-3 mt-1"></div>
+          <span class="text-[10px] md:text-xs uppercase font-bold text-steel text-center tracking-widest">Quality Assured</span>
         </div>
-        <div class="flex flex-col items-center gap-2">
-          <span class="font-display font-bold text-navy text-lg border-2 border-gold-dark px-4 py-2 rounded">ISO 14001</span>
-          <span class="text-[10px] uppercase font-bold text-steel">Environmental</span>
+        
+        <!-- ISO 14001 Badge -->
+        <div class="group flex flex-col items-center justify-center p-6 bg-white border border-border rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_30px_rgba(212,175,55,0.15)] hover:border-gold/50 transition-all duration-300 transform hover:-translate-y-1 w-[160px] md:w-[220px]">
+          <span class="font-display font-black text-navy text-xl md:text-2xl tracking-wider mb-2 group-hover:text-gold-dark transition-colors mt-2">ISO 14001</span>
+          <div class="h-0.5 w-8 bg-border group-hover:bg-gold transition-colors mb-3 mt-1"></div>
+          <span class="text-[10px] md:text-xs uppercase font-bold text-steel text-center tracking-widest">Environmental</span>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Our Trusted Clients & Partners -->
-  <section class="section bg-light py-24 border-t border-border overflow-hidden">
-    <div class="container relative z-20 flex flex-col gap-16 overflow-hidden">
-      <div class="text-center max-w-3xl mx-auto">
-        <h2 class="font-display font-black text-4xl md:text-5xl text-navy uppercase tracking-wider mb-6 drop-shadow-sm">
+  <section class="section bg-light py-16 md:py-24 border-t border-border overflow-hidden">
+    <div class="container relative z-20 flex flex-col gap-10 md:gap-16 overflow-hidden">
+      <div class="text-center max-w-3xl mx-auto px-2">
+        <h2 class="font-display font-black text-3xl sm:text-4xl md:text-5xl text-navy uppercase tracking-wider mb-4 md:mb-6 drop-shadow-sm">
           Our Trusted <span class="text-gradient-gold">Clients & Partners</span>
         </h2>
         <p class="text-steel-dark font-medium text-lg">
@@ -355,62 +371,62 @@ const pageSchema = [organizationSchema];
         <div class="absolute left-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-r from-light to-transparent z-10 pointer-events-none"></div>
         <div class="absolute right-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-l from-light to-transparent z-10 pointer-events-none"></div>
 
-        <div class="flex animate-marquee group-hover:[animation-play-state:paused] gap-8 py-4">
+        <div class="flex animate-marquee group-hover:[animation-play-state:paused] gap-4 sm:gap-8 py-4">
           {[1, 2].map(() => (
-            <div class="flex gap-8 shrink-0">
+            <div class="flex gap-4 sm:gap-8 shrink-0">
               <!-- Testimonial 1 -->
-              <div class="w-[350px] md:w-[400px] shrink-0 bg-white p-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-2 border-gold/60 hover:border-gold hover:shadow-[0_15px_40px_rgba(212,175,55,0.2)] transition-all duration-300 relative flex flex-col transform hover:-translate-y-1">
+              <div class="w-[85vw] sm:w-[350px] md:w-[400px] shrink-0 bg-white p-6 md:p-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-2 border-gold/60 hover:border-gold hover:shadow-[0_15px_40px_rgba(212,175,55,0.2)] transition-all duration-300 relative flex flex-col transform hover:-translate-y-1">
                 <div class="absolute -top-4 -right-4 w-20 h-20 bg-gold/10 rounded-full blur-2xl pointer-events-none"></div>
-                <p class="text-steel-dark text-base leading-relaxed mb-8 relative z-10 italic flex-grow font-medium">
+                <p class="text-steel-dark text-sm md:text-base leading-relaxed mb-6 md:mb-8 relative z-10 italic flex-grow font-medium">
                   "SQS Security has serviced our sites for several years, always demonstrating professionalism with a personal touch. Problems are handled efficiently."
                 </p>
                 <div class="flex items-center gap-4 mt-auto">
-                  <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-gold to-yellow-300 flex items-center justify-center text-white font-black text-lg shadow-md">JD</div>
-                  <div><p class="font-bold text-navy text-base">John Doe</p><p class="text-sm text-steel">Operations Manager</p></div>
+                  <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-tr from-gold to-yellow-300 flex items-center justify-center text-white font-black text-base md:text-lg shadow-md">JD</div>
+                  <div><p class="font-bold text-navy text-sm md:text-base">John Doe</p><p class="text-xs md:text-sm text-steel">Operations Manager</p></div>
                 </div>
               </div>
               <!-- Testimonial 2 -->
-              <div class="w-[350px] md:w-[400px] shrink-0 bg-white p-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-2 border-gold/60 hover:border-gold hover:shadow-[0_15px_40px_rgba(212,175,55,0.2)] transition-all duration-300 relative flex flex-col transform hover:-translate-y-1">
+              <div class="w-[85vw] sm:w-[350px] md:w-[400px] shrink-0 bg-white p-6 md:p-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-2 border-gold/60 hover:border-gold hover:shadow-[0_15px_40px_rgba(212,175,55,0.2)] transition-all duration-300 relative flex flex-col transform hover:-translate-y-1">
                 <div class="absolute -top-4 -right-4 w-20 h-20 bg-gold/10 rounded-full blur-2xl pointer-events-none"></div>
-                <p class="text-steel-dark text-base leading-relaxed mb-8 relative z-10 italic flex-grow font-medium">
+                <p class="text-steel-dark text-sm md:text-base leading-relaxed mb-6 md:mb-8 relative z-10 italic flex-grow font-medium">
                   "Since changing our security systems over to SQS, we have built a great working relationship. Their guards are extremely professional. Response times are second to none."
                 </p>
                 <div class="flex items-center gap-4 mt-auto">
-                  <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-gold to-yellow-300 flex items-center justify-center text-white font-black text-lg shadow-md">SM</div>
-                  <div><p class="font-bold text-navy text-base">Sarah Mitchell</p><p class="text-sm text-steel">Facilities Director</p></div>
+                  <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-tr from-gold to-yellow-300 flex items-center justify-center text-white font-black text-base md:text-lg shadow-md">SM</div>
+                  <div><p class="font-bold text-navy text-sm md:text-base">Sarah Mitchell</p><p class="text-xs md:text-sm text-steel">Facilities Director</p></div>
                 </div>
               </div>
               <!-- Testimonial 3 -->
-              <div class="w-[350px] md:w-[400px] shrink-0 bg-white p-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-2 border-gold/60 hover:border-gold hover:shadow-[0_15px_40px_rgba(212,175,55,0.2)] transition-all duration-300 relative flex flex-col transform hover:-translate-y-1">
+              <div class="w-[85vw] sm:w-[350px] md:w-[400px] shrink-0 bg-white p-6 md:p-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-2 border-gold/60 hover:border-gold hover:shadow-[0_15px_40px_rgba(212,175,55,0.2)] transition-all duration-300 relative flex flex-col transform hover:-translate-y-1">
                 <div class="absolute -top-4 -right-4 w-20 h-20 bg-gold/10 rounded-full blur-2xl pointer-events-none"></div>
-                <p class="text-steel-dark text-base leading-relaxed mb-8 relative z-10 italic flex-grow font-medium">
+                <p class="text-steel-dark text-sm md:text-base leading-relaxed mb-6 md:mb-8 relative z-10 italic flex-grow font-medium">
                   "SQS provided our project with 24-hour security and access control. The service has been exemplary, from the standard of guards to emergency call outs."
                 </p>
                 <div class="flex items-center gap-4 mt-auto">
-                  <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-gold to-yellow-300 flex items-center justify-center text-white font-black text-lg shadow-md">DT</div>
-                  <div><p class="font-bold text-navy text-base">David Turner</p><p class="text-sm text-steel">Site Manager</p></div>
+                  <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-tr from-gold to-yellow-300 flex items-center justify-center text-white font-black text-base md:text-lg shadow-md">DT</div>
+                  <div><p class="font-bold text-navy text-sm md:text-base">David Turner</p><p class="text-xs md:text-sm text-steel">Site Manager</p></div>
                 </div>
               </div>
               <!-- Testimonial 4 -->
-              <div class="w-[350px] md:w-[400px] shrink-0 bg-white p-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-2 border-gold/60 hover:border-gold hover:shadow-[0_15px_40px_rgba(212,175,55,0.2)] transition-all duration-300 relative flex flex-col transform hover:-translate-y-1">
+              <div class="w-[85vw] sm:w-[350px] md:w-[400px] shrink-0 bg-white p-6 md:p-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-2 border-gold/60 hover:border-gold hover:shadow-[0_15px_40px_rgba(212,175,55,0.2)] transition-all duration-300 relative flex flex-col transform hover:-translate-y-1">
                 <div class="absolute -top-4 -right-4 w-20 h-20 bg-gold/10 rounded-full blur-2xl pointer-events-none"></div>
-                <p class="text-steel-dark text-base leading-relaxed mb-8 relative z-10 italic flex-grow font-medium">
+                <p class="text-steel-dark text-sm md:text-base leading-relaxed mb-6 md:mb-8 relative z-10 italic flex-grow font-medium">
                   "Highly reliable and trustworthy security partner. We rely on their mobile patrols every night, and they have successfully prevented multiple intrusions."
                 </p>
                 <div class="flex items-center gap-4 mt-auto">
-                  <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-gold to-yellow-300 flex items-center justify-center text-white font-black text-lg shadow-md">EH</div>
-                  <div><p class="font-bold text-navy text-base">Emma Hayes</p><p class="text-sm text-steel">Logistics Head</p></div>
+                  <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-tr from-gold to-yellow-300 flex items-center justify-center text-white font-black text-base md:text-lg shadow-md">EH</div>
+                  <div><p class="font-bold text-navy text-sm md:text-base">Emma Hayes</p><p class="text-xs md:text-sm text-steel">Logistics Head</p></div>
                 </div>
               </div>
               <!-- Testimonial 5 -->
-              <div class="w-[350px] md:w-[400px] shrink-0 bg-white p-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-2 border-gold/60 hover:border-gold hover:shadow-[0_15px_40px_rgba(212,175,55,0.2)] transition-all duration-300 relative flex flex-col transform hover:-translate-y-1">
+              <div class="w-[85vw] sm:w-[350px] md:w-[400px] shrink-0 bg-white p-6 md:p-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-2 border-gold/60 hover:border-gold hover:shadow-[0_15px_40px_rgba(212,175,55,0.2)] transition-all duration-300 relative flex flex-col transform hover:-translate-y-1">
                 <div class="absolute -top-4 -right-4 w-20 h-20 bg-gold/10 rounded-full blur-2xl pointer-events-none"></div>
-                <p class="text-steel-dark text-base leading-relaxed mb-8 relative z-10 italic flex-grow font-medium">
+                <p class="text-steel-dark text-sm md:text-base leading-relaxed mb-6 md:mb-8 relative z-10 italic flex-grow font-medium">
                   "The waking watch team from SQS was deployed within hours. Their rapid response and professional demeanor gave our residents total peace of mind."
                 </p>
                 <div class="flex items-center gap-4 mt-auto">
-                  <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-gold to-yellow-300 flex items-center justify-center text-white font-black text-lg shadow-md">RJ</div>
-                  <div><p class="font-bold text-navy text-base">Richard Jones</p><p class="text-sm text-steel">Property Manager</p></div>
+                  <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-tr from-gold to-yellow-300 flex items-center justify-center text-white font-black text-base md:text-lg shadow-md">RJ</div>
+                  <div><p class="font-bold text-navy text-sm md:text-base">Richard Jones</p><p class="text-xs md:text-sm text-steel">Property Manager</p></div>
                 </div>
               </div>
             </div>
@@ -421,24 +437,24 @@ const pageSchema = [organizationSchema];
       <!-- Logos Marquee -->
       <div class="mt-4 pt-16 border-t border-border relative w-full overflow-hidden flex group">
         <div class="absolute top-6 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap">
-          <p class="text-sm font-black text-navy uppercase tracking-widest bg-white px-8 py-2 rounded-full shadow-sm border border-border">Trusted by leading organisations</p>
+          <p class="text-[10px] sm:text-xs md:text-sm font-black text-navy uppercase tracking-widest bg-white px-4 sm:px-6 md:px-8 py-1.5 md:py-2 rounded-full shadow-sm border border-border">Trusted by leading organisations</p>
         </div>
         
         <!-- Overlay gradients -->
-        <div class="absolute left-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-r from-light to-transparent z-10 pointer-events-none"></div>
-        <div class="absolute right-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-l from-light to-transparent z-10 pointer-events-none"></div>
+        <div class="absolute left-0 top-0 bottom-0 w-8 md:w-32 bg-gradient-to-r from-light to-transparent z-10 pointer-events-none"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-8 md:w-32 bg-gradient-to-l from-light to-transparent z-10 pointer-events-none"></div>
 
-        <div class="flex animate-marquee-fast group-hover:[animation-play-state:paused] gap-16 py-8 items-center mt-6">
+        <div class="flex animate-marquee-fast group-hover:[animation-play-state:paused] gap-8 md:gap-16 py-8 items-center mt-6">
           {[1, 2].map(() => (
-            <div class="flex gap-16 shrink-0 items-center">
-              <div class="text-3xl font-black font-display text-blue-600 drop-shadow-sm shrink-0">NHS</div>
-              <div class="text-2xl font-black font-display text-red-600 shrink-0 tracking-tighter">HSBC</div>
-              <div class="text-2xl font-black font-display text-navy uppercase tracking-widest border-2 border-gold px-3 py-1 shrink-0">TESCO</div>
-              <div class="text-2xl font-bold font-display text-blue-500 italic drop-shadow-sm shrink-0">BARCLAYS</div>
-              <div class="text-3xl font-black font-display text-orange-500 shrink-0">amazon <span class="font-light text-sm text-steel">logistics</span></div>
-              <div class="text-2xl font-black font-display text-emerald-600 shrink-0">MACMILLAN</div>
-              <div class="text-2xl font-black font-display text-navy shrink-0">BAE<span class="text-red-600">SYSTEMS</span></div>
-              <div class="text-2xl font-black font-display text-indigo-600 shrink-0 italic">KPMG</div>
+            <div class="flex gap-8 md:gap-16 shrink-0 items-center">
+              <div class="text-2xl md:text-3xl font-black font-display text-blue-600 drop-shadow-sm shrink-0">NHS</div>
+              <div class="text-xl md:text-2xl font-black font-display text-red-600 shrink-0 tracking-tighter">HSBC</div>
+              <div class="text-xl md:text-2xl font-black font-display text-navy uppercase tracking-widest border-2 border-gold px-2 md:px-3 py-1 shrink-0">TESCO</div>
+              <div class="text-xl md:text-2xl font-bold font-display text-blue-500 italic drop-shadow-sm shrink-0">BARCLAYS</div>
+              <div class="text-2xl md:text-3xl font-black font-display text-orange-500 shrink-0">amazon <span class="font-light text-xs md:text-sm text-steel">logistics</span></div>
+              <div class="text-xl md:text-2xl font-black font-display text-emerald-600 shrink-0">MACMILLAN</div>
+              <div class="text-xl md:text-2xl font-black font-display text-navy shrink-0">BAE<span class="text-red-600">SYSTEMS</span></div>
+              <div class="text-xl md:text-2xl font-black font-display text-indigo-600 shrink-0 italic">KPMG</div>
             </div>
           ))}
         </div>
@@ -514,66 +530,66 @@ const pageSchema = [organizationSchema];
   </section>
 
   <!-- FAQ Section -->
-  <section class="section bg-light py-24 border-t border-border">
-    <div class="container max-w-4xl flex flex-col gap-12">
-      <div class="text-center">
-        <h2 class="font-display font-black text-4xl md:text-5xl text-navy uppercase tracking-wider mb-4">
+  <section class="section bg-light py-16 md:py-24 border-t border-border">
+    <div class="container max-w-4xl flex flex-col gap-8 md:gap-12">
+      <div class="text-center px-2">
+        <h2 class="font-display font-black text-3xl sm:text-4xl md:text-5xl text-navy uppercase tracking-wider mb-4">
           Frequently <span class="text-gradient-gold">Asked Questions</span>
         </h2>
-        <p class="text-steel-dark font-medium text-lg">
+        <p class="text-steel-dark font-medium text-base md:text-lg">
           Common questions from FM companies, project managers, and property teams.
         </p>
       </div>
 
-      <div class="flex flex-col gap-5">
+      <div class="flex flex-col gap-4 md:gap-5">
         <!-- FAQ Item 1 -->
         <details class="group bg-white rounded-xl shadow-sm border border-border border-l-[6px] border-l-blue-500 hover:border-l-blue-600 hover:shadow-md transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
-          <summary class="flex items-center justify-between cursor-pointer p-6 font-display font-bold text-lg text-navy">
-            <span class="group-hover:text-blue-600 transition-colors">Are all your security guards SIA licensed?</span>
-            <span class="transition group-open:rotate-180 bg-blue-50 text-blue-600 p-2 rounded-full">
-              <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+          <summary class="flex items-center justify-between cursor-pointer p-4 md:p-6 font-display font-bold text-base md:text-lg text-navy">
+            <span class="group-hover:text-blue-600 transition-colors pr-4 leading-snug">Are all your security guards SIA licensed?</span>
+            <span class="transition group-open:rotate-180 bg-blue-50 text-blue-600 p-1.5 md:p-2 rounded-full shrink-0">
+              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-5 h-5 md:w-6 md:h-6"><path d="M6 9l6 6 6-6"></path></svg>
             </span>
           </summary>
-          <div class="px-6 pb-6 text-steel leading-relaxed border-t border-border pt-4 mt-2">
+          <div class="px-4 md:px-6 pb-4 md:pb-6 text-steel text-sm md:text-base leading-relaxed border-t border-border pt-3 md:pt-4 mt-1 md:mt-2">
             Yes. Every security officer we deploy holds a current SIA (Security Industry Authority) licence. This is a legal requirement in the UK and ensures our personnel have passed rigorous identity checks, criminal record checks, and relevant security training.
           </div>
         </details>
 
         <!-- FAQ Item 2 -->
         <details class="group bg-white rounded-xl shadow-sm border border-border border-l-[6px] border-l-gold hover:border-l-gold-dark hover:shadow-md transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
-          <summary class="flex items-center justify-between cursor-pointer p-6 font-display font-bold text-lg text-navy">
-            <span class="group-hover:text-gold-dark transition-colors">Do you provide emergency or short-notice cover?</span>
-            <span class="transition group-open:rotate-180 bg-gold/10 text-gold-dark p-2 rounded-full">
-              <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+          <summary class="flex items-center justify-between cursor-pointer p-4 md:p-6 font-display font-bold text-base md:text-lg text-navy">
+            <span class="group-hover:text-gold-dark transition-colors pr-4 leading-snug">Do you provide emergency or short-notice cover?</span>
+            <span class="transition group-open:rotate-180 bg-gold/10 text-gold-dark p-1.5 md:p-2 rounded-full shrink-0">
+              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-5 h-5 md:w-6 md:h-6"><path d="M6 9l6 6 6-6"></path></svg>
             </span>
           </summary>
-          <div class="px-6 pb-6 text-steel leading-relaxed border-t border-border pt-4 mt-2">
+          <div class="px-4 md:px-6 pb-4 md:pb-6 text-steel text-sm md:text-base leading-relaxed border-t border-border pt-3 md:pt-4 mt-1 md:mt-2">
             Absolutely. We understand that security gaps happen without warning. SQS Security responds quickly to urgent cover requests, providing SIA-licensed officers without complicated procurement delays.
           </div>
         </details>
 
         <!-- FAQ Item 3 -->
         <details class="group bg-white rounded-xl shadow-sm border border-border border-l-[6px] border-l-teal-500 hover:border-l-teal-600 hover:shadow-md transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
-          <summary class="flex items-center justify-between cursor-pointer p-6 font-display font-bold text-lg text-navy">
-            <span class="group-hover:text-teal-600 transition-colors">What kind of reporting do you provide?</span>
-            <span class="transition group-open:rotate-180 bg-teal-50 text-teal-600 p-2 rounded-full">
-              <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+          <summary class="flex items-center justify-between cursor-pointer p-4 md:p-6 font-display font-bold text-base md:text-lg text-navy">
+            <span class="group-hover:text-teal-600 transition-colors pr-4 leading-snug">What kind of reporting do you provide?</span>
+            <span class="transition group-open:rotate-180 bg-teal-50 text-teal-600 p-1.5 md:p-2 rounded-full shrink-0">
+              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-5 h-5 md:w-6 md:h-6"><path d="M6 9l6 6 6-6"></path></svg>
             </span>
           </summary>
-          <div class="px-6 pb-6 text-steel leading-relaxed border-t border-border pt-4 mt-2">
+          <div class="px-4 md:px-6 pb-4 md:pb-6 text-steel text-sm md:text-base leading-relaxed border-t border-border pt-3 md:pt-4 mt-1 md:mt-2">
             We provide clear, written reporting for every deployment. Shift reports, access logs, and incident records are delivered to clients after every assignment, so you never have to chase us for documentation.
           </div>
         </details>
 
         <!-- FAQ Item 4 -->
         <details class="group bg-white rounded-xl shadow-sm border border-border border-l-[6px] border-l-purple-500 hover:border-l-purple-600 hover:shadow-md transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
-          <summary class="flex items-center justify-between cursor-pointer p-6 font-display font-bold text-lg text-navy">
-            <span class="group-hover:text-purple-600 transition-colors">Do you cover my specific area?</span>
-            <span class="transition group-open:rotate-180 bg-purple-50 text-purple-600 p-2 rounded-full">
-              <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+          <summary class="flex items-center justify-between cursor-pointer p-4 md:p-6 font-display font-bold text-base md:text-lg text-navy">
+            <span class="group-hover:text-purple-600 transition-colors pr-4 leading-snug">Do you cover my specific area?</span>
+            <span class="transition group-open:rotate-180 bg-purple-50 text-purple-600 p-1.5 md:p-2 rounded-full shrink-0">
+              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-5 h-5 md:w-6 md:h-6"><path d="M6 9l6 6 6-6"></path></svg>
             </span>
           </summary>
-          <div class="px-6 pb-6 text-steel leading-relaxed border-t border-border pt-4 mt-2">
+          <div class="px-4 md:px-6 pb-4 md:pb-6 text-steel text-sm md:text-base leading-relaxed border-t border-border pt-3 md:pt-4 mt-1 md:mt-2">
             While our headquarters is based in Southampton, we provide comprehensive, UK-wide deployment. Whether you are in London, Manchester, Brighton, or Birmingham, we have local experts ready to secure your premises.
           </div>
         </details>
@@ -582,13 +598,12 @@ const pageSchema = [organizationSchema];
   </section>
   <!-- 5. Final CTA Section -->
   <section class="section bg-white text-navy relative overflow-hidden border-t border-border">
-    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(240,244,248,0.5)_0%,rgba(255,255,255,1)_100%)] pointer-events-none"></div>
     <div class="container relative z-10 text-center max-w-3xl flex flex-col items-center gap-8 py-16">
       <h2 class="font-black font-display text-4xl md:text-5xl leading-tight uppercase tracking-wide">
         <span class="text-gradient-gold">Schedule a Meeting</span>
       </h2>
       <p class="text-steel-dark text-lg max-w-2xl font-medium">
-        With SQS Security, you can trust that our high-quality teams are dedicated to the well-being of the community they serve. Contact us today.
+        Partner with SQS Security Service to safeguard your assets, personnel, and operations. Our elite, SIA-licensed teams deliver uncompromising, tailored protection strategies. Connect with our specialists today to secure your peace of mind.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4 justify-center">
         <Button href="/contact" variant="primary" size="lg" class="px-10 py-4 text-lg">
@@ -603,7 +618,7 @@ const pageSchema = [organizationSchema];
     <!-- Top shadow gradient to blend with content above -->
     <div class="absolute top-0 left-0 w-full h-12 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none"></div>
     <iframe 
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2516.486300405106!2d-1.4024222!3d50.9084803!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4874713c72626e25%3A0x6b2e1e0a2d5f3d38!2s86%20Brintons%20Rd%2C%20Southampton!5e0!3m2!1sen!2suk!4v1680000000000!5m2!1sen!2suk" 
+      src="https://maps.google.com/maps?q=104%20Graham%20Rd,%20Southampton%20SO14%200AZ&t=&z=15&ie=UTF8&iwloc=&output=embed" 
       width="100%" 
       height="100%" 
       style="border:0;" 
