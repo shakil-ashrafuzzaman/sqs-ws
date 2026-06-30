@@ -1,0 +1,147 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import Badge from '@components/common/Badge.astro';
+import Card from '@components/common/Card.astro';
+---
+
+<PageLayout 
+  title="Careers | SQS Security Service"
+  description="Join the SQS Security Service team. We offer industry-leading training, competitive benefits, and outstanding career progression in the security sector."
+>
+  <!-- Hero Section -->
+  <section class="bg-navy-dark py-20 md:py-32 text-white relative overflow-hidden">
+    <!-- Animated background gradients -->
+    <div class="absolute inset-0 z-0">
+      <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-gold-dark/20 rounded-full blur-[100px] opacity-60 animate-pulse"></div>
+      <div class="absolute bottom-0 right-0 w-[600px] h-[600px] bg-navy-light/40 rounded-full blur-[120px] opacity-50"></div>
+    </div>
+
+    <div class="container relative z-10 flex flex-col items-center text-center gap-8 max-w-4xl animate-fade-in-up">
+      <Badge variant="gold" class="text-sm md:text-base px-4 md:px-5 py-1.5 font-bold tracking-widest scale-110">Careers</Badge>
+      
+      <h1 class="font-display font-black text-4xl sm:text-5xl md:text-6xl lg:text-7xl uppercase tracking-wider leading-tight">
+        <span class="text-white">Join Our</span> <br/>
+        <span class="text-gradient-gold">Elite Team</span>
+      </h1>
+      
+      <p class="text-xl md:text-2xl text-steel-light leading-relaxed max-w-3xl font-medium">
+        Build a rewarding career with SQS Security Service. We invest in our people to deliver uncompromising safety and operational excellence.
+      </p>
+      
+      <a href="#openings" class="mt-4 inline-block bg-gradient-to-r from-gold to-gold-dark text-navy font-black px-10 py-4 rounded-xl shadow-lg hover:shadow-gold/30 hover:-translate-y-1 transition-all duration-300 uppercase tracking-widest">
+        View Open Positions
+      </a>
+    </div>
+  </section>
+
+  <!-- Why Join Us Section -->
+  <section class="section bg-light border-b border-border">
+    <div class="container flex flex-col gap-16">
+      <div class="text-center max-w-3xl mx-auto flex flex-col items-center gap-4">
+        <div class="inline-flex items-center gap-3 mb-2">
+          <div class="w-12 h-1 bg-gold"></div>
+          <span class="uppercase tracking-widest text-navy font-bold">Why Choose SQS</span>
+          <div class="w-12 h-1 bg-gold"></div>
+        </div>
+        <h2 class="font-display font-black text-3xl md:text-5xl text-navy uppercase tracking-wide">
+          Industry-Leading Benefits
+        </h2>
+        <p class="text-steel-dark text-lg leading-relaxed">
+          At SQS Security Service, we believe our people are our greatest asset. We provide an environment where dedication is recognized and professional growth is actively supported.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-border hover:border-gold transform hover:-translate-y-2 text-center">
+          <div class="w-16 h-16 bg-navy/5 group-hover:bg-navy rounded-xl flex items-center justify-center mb-6 mx-auto transition-colors duration-300">
+            <svg class="w-8 h-8 text-navy group-hover:text-gold transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="font-display font-black text-2xl text-navy mb-3">Competitive Pay</h3>
+          <p class="text-steel-dark leading-relaxed">We offer industry-leading remuneration packages, regular performance bonuses, and a comprehensive pension scheme.</p>
+        </div>
+
+        <div class="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-border hover:border-gold transform hover:-translate-y-2 text-center">
+          <div class="w-16 h-16 bg-gold/10 group-hover:bg-gold rounded-xl flex items-center justify-center mb-6 mx-auto transition-colors duration-300">
+            <svg class="w-8 h-8 text-gold-dark group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          </div>
+          <h3 class="font-display font-black text-2xl text-navy mb-3">Career Progression</h3>
+          <p class="text-steel-dark leading-relaxed">Clear pathways for advancement from frontline officer to management and specialized roles within our enterprise network.</p>
+        </div>
+
+        <div class="group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-border hover:border-gold transform hover:-translate-y-2 text-center">
+          <div class="w-16 h-16 bg-teal-50 group-hover:bg-teal-500 rounded-xl flex items-center justify-center mb-6 mx-auto transition-colors duration-300">
+            <svg class="w-8 h-8 text-teal-600 group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+          </div>
+          <h3 class="font-display font-black text-2xl text-navy mb-3">Ongoing Training</h3>
+          <p class="text-steel-dark leading-relaxed">Access to continuous professional development, advanced certifications, and specialized physical intervention training.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Current Openings -->
+  <section id="openings" class="section bg-white border-b border-border">
+    <div class="container flex flex-col gap-12">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <Badge variant="navy" class="mb-4">Current Opportunities</Badge>
+          <h2 class="font-display font-black text-3xl md:text-4xl text-navy">
+            Open Positions
+          </h2>
+        </div>
+        <p class="text-steel-dark text-lg max-w-xl">
+          We are constantly looking for dedicated professionals to join our expanding team across the UK. Check our current vacancies below.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 gap-6">
+        <!-- Job Card 1 -->
+        <Card class="flex flex-col md:flex-row items-start md:items-center justify-between p-6 md:p-8 gap-6 border border-border hover:border-gold transition-colors duration-300 shadow-sm hover:shadow-md bg-light/30">
+          <div class="flex flex-col gap-3">
+            <div class="flex flex-wrap items-center gap-3">
+              <span class="bg-navy text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-md">Full Time</span>
+              <span class="bg-gray-200 text-steel-dark text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-md">London & South East</span>
+            </div>
+            <h3 class="font-display font-black text-2xl text-navy">Corporate Security Officer</h3>
+            <p class="text-steel-dark max-w-2xl">
+              We are seeking professional, highly presentable SIA licensed security officers for prestigious corporate sites in Central London. Excellent customer service skills are essential.
+            </p>
+          </div>
+          <a href="/contact" class="shrink-0 bg-white border-2 border-navy text-navy font-bold px-8 py-3 rounded-xl hover:bg-navy hover:text-white transition-all duration-300">
+            Apply Now
+          </a>
+        </Card>
+
+        <!-- Job Card 2 -->
+        <Card class="flex flex-col md:flex-row items-start md:items-center justify-between p-6 md:p-8 gap-6 border border-border hover:border-gold transition-colors duration-300 shadow-sm hover:shadow-md bg-light/30">
+          <div class="flex flex-col gap-3">
+            <div class="flex flex-wrap items-center gap-3">
+              <span class="bg-navy text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-md">Full Time</span>
+              <span class="bg-gray-200 text-steel-dark text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-md">Nationwide</span>
+            </div>
+            <h3 class="font-display font-black text-2xl text-navy">Mobile Patrol & Response Unit</h3>
+            <p class="text-steel-dark max-w-2xl">
+              Experienced mobile patrol officers required. Must hold a valid SIA license and clean UK driving license. Roles involve keyholding, alarm response, and rigorous property inspections.
+            </p>
+          </div>
+          <a href="/contact" class="shrink-0 bg-white border-2 border-navy text-navy font-bold px-8 py-3 rounded-xl hover:bg-navy hover:text-white transition-all duration-300">
+            Apply Now
+          </a>
+        </Card>
+      </div>
+
+      <div class="mt-8 bg-navy p-8 md:p-12 rounded-2xl text-white flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
+        <div class="absolute right-0 top-0 w-64 h-64 bg-gold/10 rounded-full blur-3xl"></div>
+        <div class="relative z-10">
+          <h3 class="font-display font-bold text-2xl md:text-3xl mb-3">Don't see a perfect fit?</h3>
+          <p class="text-steel-light text-lg max-w-2xl">
+            We are always on the lookout for exceptional talent. Send us your CV and a brief cover letter, and we'll keep you in mind for future opportunities.
+          </p>
+        </div>
+        <a href="/contact" class="relative z-10 shrink-0 bg-gold text-navy font-black px-8 py-4 rounded-xl shadow-lg hover:bg-gold-light transition-all duration-300 uppercase tracking-widest text-sm text-center">
+          Submit General Application
+        </a>
+      </div>
+    </div>
+  </section>
+</PageLayout>

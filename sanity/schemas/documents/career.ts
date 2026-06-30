@@ -7,7 +7,7 @@ import { Briefcase } from 'lucide-react'
 
 export const career = defineType({
   name: 'career',
-  title: 'Careers',
+  title: 'Current Opportunities',
   type: 'document',
   icon: Briefcase,
 
