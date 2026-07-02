@@ -2,7 +2,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
-import vercel from '@astrojs/vercel';
+import node from '@astrojs/node';
 import react from '@astrojs/react';
 
 import sanity from '@sanity/astro';
@@ -12,12 +12,13 @@ export default defineConfig({
   // Site domain for canonical URLs and sitemap
   site: 'https://sqssecurity.co.uk',
 
-  // Static output (default in Astro 5).
-  // Individual API routes opt-in to SSR with: export const prerender = false;
-  output: 'static',
+  // Server output for cPanel Node.js hosting (allows API routes)
+  output: 'server',
   
-  // Required adapter for Vercel deployment
-  adapter: vercel(),
+  // Node adapter for cPanel
+  adapter: node({
+    mode: 'standalone'
+  }),
 
   // Vite plugins — Tailwind CSS 4 is a Vite-native plugin
   vite: {
