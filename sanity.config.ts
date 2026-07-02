@@ -9,8 +9,8 @@ export default defineConfig({
   name: 'sqs-security',
   title: 'SQS Security CMS',
 
-  projectId: typeof process !== 'undefined' ? process.env.PUBLIC_SANITY_PROJECT_ID : (import.meta.env ? import.meta.env.PUBLIC_SANITY_PROJECT_ID : 'k4vpp9e5'),
-  dataset: typeof process !== 'undefined' ? process.env.PUBLIC_SANITY_DATASET : (import.meta.env ? import.meta.env.PUBLIC_SANITY_DATASET : 'production'),
+  projectId: (typeof process !== 'undefined' && process.env.PUBLIC_SANITY_PROJECT_ID) || (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.PUBLIC_SANITY_PROJECT_ID) || 'k4vpp9e5',
+  dataset: (typeof process !== 'undefined' && process.env.PUBLIC_SANITY_DATASET) || (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.PUBLIC_SANITY_DATASET) || 'production',
 
   plugins: [
     structureTool({ structure }),

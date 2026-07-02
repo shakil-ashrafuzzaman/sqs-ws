@@ -1,0 +1,12 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Disallow access to the CMS admin panel
+Disallow: /studio/
+
+# Disallow access to the API endpoints
+Disallow: /api/
+
+# Sitemap Location
+Sitemap: https://sqssecurity.co.uk/sitemap-index.xml
