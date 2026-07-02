@@ -190,9 +190,9 @@ const isActive = (href) => {
     <div class="container flex flex-col md:flex-row justify-between items-center gap-4">
 
       <!-- Left: Continuous Marquee (Left to Right) -->
-      <div class="flex-1 overflow-hidden relative flex items-center max-w-full md:max-w-[65%] w-full">
+      <div class="flex-1 overflow-hidden relative flex items-center max-w-full md:max-w-[65%] w-full -ml-4 md:-ml-8 lg:-ml-12">
         <!-- Mask gradient to fade the edges of the marquee smoothly into the ice-blue background -->
-        <div class="absolute inset-0 z-10 pointer-events-none" style="background: linear-gradient(to right, var(--color-ice-blue) 0%, transparent 15%, transparent 85%, var(--color-ice-blue) 100%);"></div>
+        <div class="absolute inset-0 z-10 pointer-events-none" style="background: linear-gradient(to right, var(--color-ice-blue) 0%, transparent 5%, transparent 90%, var(--color-ice-blue) 100%);"></div>
         
         <div class="flex whitespace-nowrap animate-marquee-ltr w-max">
           <!-- Set 1 -->
