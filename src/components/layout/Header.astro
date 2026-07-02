@@ -186,8 +186,29 @@ const isActive = (href) => {
   </nav>
 
   <!-- Emergency banner below header -->
-  <div class="bg-ice-blue text-navy text-xs md:text-sm font-semibold py-2.5 shadow-sm relative z-40">
-    <div class="container flex flex-col md:flex-row justify-end items-center gap-4">
+  <div class="bg-ice-blue text-navy text-xs md:text-sm font-semibold py-2.5 shadow-sm relative z-40 overflow-hidden">
+    <div class="container flex flex-col md:flex-row justify-between items-center gap-4">
+
+      <!-- Left: Continuous Marquee (Left to Right) -->
+      <div class="flex-1 overflow-hidden relative flex items-center max-w-full md:max-w-[65%] w-full">
+        <!-- Mask gradient to fade the edges of the marquee smoothly into the ice-blue background -->
+        <div class="absolute inset-0 z-10 pointer-events-none" style="background: linear-gradient(to right, var(--color-ice-blue) 0%, transparent 15%, transparent 85%, var(--color-ice-blue) 100%);"></div>
+        
+        <div class="flex whitespace-nowrap animate-marquee-ltr w-max">
+          <!-- Set 1 -->
+          <div class="flex items-center w-max shrink-0 px-2">
+            <span class="inline-flex items-center gap-1.5 mx-4 md:mx-6"><span class="text-gold">★</span> 99% Retention Rate</span>
+            <span class="inline-flex items-center gap-1.5 mx-4 md:mx-6"><span class="text-gold">★</span> Available 24/7</span>
+            <span class="inline-flex items-center gap-1.5 mx-4 md:mx-6"><span class="text-gold">★</span> Coverage over UK</span>
+          </div>
+          <!-- Set 2 -->
+          <div class="flex items-center w-max shrink-0 px-2">
+            <span class="inline-flex items-center gap-1.5 mx-4 md:mx-6"><span class="text-gold">★</span> 99% Retention Rate</span>
+            <span class="inline-flex items-center gap-1.5 mx-4 md:mx-6"><span class="text-gold">★</span> Available 24/7</span>
+            <span class="inline-flex items-center gap-1.5 mx-4 md:mx-6"><span class="text-gold">★</span> Coverage over UK</span>
+          </div>
+        </div>
+      </div>
 
       <!-- Right: Main Phone & Email -->
       <div class="flex items-center gap-6 text-sm md:text-base">
