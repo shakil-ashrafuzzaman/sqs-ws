@@ -1,1 +1,0 @@
-import{c as n,j as i,S as o,a}from"./pane2.CgtCAEKP.js";import"./client.Bincbsbe.js";function d(l){const e=n.c(4);let t;e[0]!==l?(t=l.renderDefault(l),e[0]=l,e[1]=t):t=e[1];let r;return e[2]!==t?(r=i.jsx(o,{children:i.jsx(a,{children:t})}),e[2]=t,e[3]=r):r=e[3],r}export{d as SingleDocReleaseLayout};
