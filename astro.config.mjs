@@ -2,8 +2,8 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
-import node from '@astrojs/node';
 import react from '@astrojs/react';
+import patchCjs from './patch-cjs.js';
 
 import sanity from '@sanity/astro';
 
@@ -12,17 +12,33 @@ export default defineConfig({
   // Site domain for canonical URLs and sitemap
   site: 'https://sqssecurity.co.uk',
 
-  // Server output for cPanel Node.js hosting (allows API routes)
-  output: 'server',
-  
-  // Node adapter for cPanel
-  adapter: node({
-    mode: 'standalone'
-  }),
+  // Static Site Generation (SSG) mode for cPanel standard hosting
+  output: 'static',
 
-  // Vite plugins — Tailwind CSS 4 is a Vite-native plugin
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [
+      tailwindcss(),
+      patchCjs()
+    ],
+    define: {},
+    build: {
+      commonjsOptions: {
+        include: [/node_modules/]
+      }
+    },
+    optimizeDeps: {
+      include: [
+        'event-source-polyfill',
+        '@sanity/eventsource',
+        '@sanity/eventsource/browser',
+        '@sanity/client',
+        'sanity',
+        '@sanity/vision',
+        'react',
+        'react-dom',
+        'react/jsx-runtime'
+      ]
+    }
   },
 
   integrations: [

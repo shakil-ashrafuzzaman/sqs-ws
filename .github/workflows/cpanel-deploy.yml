@@ -1,0 +1,45 @@
+name: Deploy Astro to cPanel
+
+on:
+  # Triggers when you push code to the main branch
+  push:
+    branches:
+      - main
+  # Triggers when Sanity sends a webhook event
+  repository_dispatch:
+    types: [sanity-update]
+  # Allows you to trigger the deployment manually from GitHub Actions tab
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v4
+
+      - name: 🏗 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 📦 Install dependencies
+        run: npm install
+
+      - name: 🔨 Build Astro Project
+        run: npm run build
+        env:
+          PUBLIC_SANITY_PROJECT_ID: ${{ secrets.PUBLIC_SANITY_PROJECT_ID }}
+          PUBLIC_SANITY_DATASET: ${{ secrets.PUBLIC_SANITY_DATASET }}
+
+      - name: 📂 Sync files via FTP to cPanel
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          # Path to the build output folder
+          local-dir: ./dist/
+          # (Optional) specify your cPanel folder if it's not the root of your FTP user
+          # server-dir: ./public_html/
