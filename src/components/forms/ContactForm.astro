@@ -1,8 +1,14 @@
 ---
 import Button from '@components/common/Button.astro';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = "bg-white p-8 rounded-xl shadow-card border border-border w-full relative" } = Astro.props;
 ---
 
-<div class="bg-white p-8 rounded-xl shadow-card border border-border w-full relative">
+<div class={className}>
   <!-- Alerts Container -->
   <div id="form-alerts" class="mb-6 hidden flex-col gap-4">
     <!-- Success Alert -->

@@ -3,6 +3,7 @@ import PageLayout from '@layouts/PageLayout.astro';
 import Button from '@components/common/Button.astro';
 import Card from '@components/common/Card.astro';
 import Badge from '@components/common/Badge.astro';
+import ContactForm from '@components/forms/ContactForm.astro';
 import { sanityClient, urlFor } from '@lib/sanity';
 
 const [siteSettings, fetchedServices, contactInfo] = await Promise.all([
@@ -242,7 +243,7 @@ const pageSchema = [organizationSchema];
         <Button href={`tel:${phoneEmergency.replace(/\s+/g, '')}`} variant="outline" size="lg" class="w-full sm:w-auto text-lg px-10 py-4 bg-navy/60 border-white/40 text-white backdrop-blur-md hover:bg-navy/90 hover:border-gold shadow-xl transition-all">
           {phoneEmergency}
         </Button>
-        <Button href="/contact" variant="outline" size="lg" class="w-full sm:w-auto text-lg px-10 py-4 bg-navy/60 border-white/40 text-white backdrop-blur-md hover:bg-navy/90 hover:border-gold shadow-xl transition-all">
+        <Button id="hero-enquire-btn" href="javascript:void(0)" variant="outline" size="lg" class="w-full sm:w-auto text-lg px-10 py-4 bg-navy/60 border-white/40 text-white backdrop-blur-md hover:bg-navy/90 hover:border-gold shadow-xl transition-all">
           Enquire Now
         </Button>
       </div>
@@ -851,6 +852,79 @@ const pageSchema = [organizationSchema];
     <!-- Interactive overlay that disappears on hover so map is usable, but looks nice before interaction -->
     <div class="absolute inset-0 bg-navy/5 group-hover:bg-transparent transition-colors duration-500 pointer-events-none"></div>
   </section>
+
+  <!-- Enquiry Modal Dialog -->
+  <div id="enquiry-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-dark/70 backdrop-blur-md hidden transition-all duration-300 opacity-0 pointer-events-none">
+    <!-- Modal Container -->
+    <div class="relative w-full max-w-2xl bg-white rounded-3xl p-6 md:p-10 shadow-2xl border border-border/80 flex flex-col gap-6 animate-fade-in-up transform scale-95 transition-all duration-300">
+      <!-- Close Button -->
+      <button id="close-modal-btn" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 hover:scale-110 transition-all p-2 cursor-pointer z-20" aria-label="Close modal">
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      
+      <!-- Modal Header -->
+      <div class="text-center lg:text-left pr-8">
+        <h2 class="font-display font-black text-3xl md:text-4xl text-navy uppercase tracking-wide">
+          Send us a message
+        </h2>
+        <p class="text-steel-dark text-sm md:text-base mt-2 font-medium">
+          Please fill out the form below detailing your security requirements. We aim to respond to all web enquiries within <span class="font-bold text-navy">2 business hours</span>.
+        </p>
+      </div>
+      
+      <!-- Embedded Contact Form -->
+      <ContactForm class="w-full relative" />
+    </div>
+  </div>
+
+  <script>
+    const enquireBtn = document.getElementById('hero-enquire-btn');
+    const modal = document.getElementById('enquiry-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const modalContainer = modal?.querySelector('.relative.w-full.max-w-2xl');
+
+    if (enquireBtn && modal && closeModalBtn && modalContainer) {
+      const openModal = (e: Event) => {
+        e.preventDefault();
+        modal.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+        modal.classList.add('flex', 'opacity-100');
+        setTimeout(() => {
+          modalContainer.classList.remove('scale-95');
+          modalContainer.classList.add('scale-100');
+        }, 10);
+        document.body.style.overflow = 'hidden';
+      };
+
+      const closeModal = () => {
+        modalContainer.classList.remove('scale-100');
+        modalContainer.classList.add('scale-95');
+        modal.classList.remove('opacity-100');
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        setTimeout(() => {
+          modal.classList.remove('flex');
+          modal.classList.add('hidden');
+        }, 300);
+        document.body.style.overflow = '';
+      };
+
+      enquireBtn.addEventListener('click', openModal);
+      closeModalBtn.addEventListener('click', closeModal);
+
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+          closeModal();
+        }
+      });
+    }
+  </script>
 </PageLayout>
 
 <style is:global>
