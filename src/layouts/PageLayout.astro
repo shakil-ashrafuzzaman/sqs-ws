@@ -2,6 +2,7 @@
 import BaseLayout from './BaseLayout.astro';
 import Header from '@components/layout/Header.astro';
 import Footer from '@components/layout/Footer.astro';
+import QuickQuoteForm from '@components/forms/QuickQuoteForm.astro';
 
 interface Props {
   title?: string;
@@ -73,4 +74,94 @@ if (breadcrumbSchema) {
     <slot />
   </main>
   <Footer />
+
+  <!-- Global Quick Quote Modal Dialog -->
+  <div id="quick-quote-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-dark/70 backdrop-blur-md hidden transition-all duration-300 opacity-0 pointer-events-none">
+    <!-- Modal Container -->
+    <div class="relative w-full max-w-2xl bg-white rounded-3xl p-6 md:p-10 shadow-2xl border border-border/80 flex flex-col gap-6 animate-fade-in-up transform scale-95 transition-all duration-300">
+      <!-- Close Button -->
+      <button id="close-quote-modal-btn" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 hover:scale-110 transition-all p-2 cursor-pointer z-20" aria-label="Close modal">
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      
+      <!-- Modal Header -->
+      <div class="text-center lg:text-left pr-8">
+        <h2 class="font-display font-black text-3xl md:text-4xl text-navy uppercase tracking-wide">
+          Quick Quote Request
+        </h2>
+        <p class="text-steel-dark text-sm md:text-base mt-2 font-medium">
+          Request a fast security quote in 3 simple steps. Our team will get back to you within <span class="font-bold text-navy">2 business hours</span>.
+        </p>
+      </div>
+      
+      <!-- Embedded Quick Quote Form -->
+      <div class="relative overflow-hidden min-h-[500px] sm:min-h-[420px] bg-[#f8f9fa] rounded-2xl p-4 md:p-6 border border-border/60">
+        <QuickQuoteForm class="relative overflow-hidden min-h-[480px] sm:min-h-[380px]" />
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function setupGlobalQuoteModal() {
+      const quoteBtns = document.querySelectorAll('.request-quote-btn');
+      const modal = document.getElementById('quick-quote-modal');
+      const closeModalBtn = document.getElementById('close-quote-modal-btn');
+      const modalContainer = modal?.querySelector('.relative.w-full.max-w-2xl');
+      const quoteForm = modal?.querySelector('.quick-quote-form');
+
+      if (modal && closeModalBtn && modalContainer) {
+        const openModal = (e: Event) => {
+          e.preventDefault();
+          modal.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+          modal.classList.add('flex', 'opacity-100');
+          setTimeout(() => {
+            modalContainer.classList.remove('scale-95');
+            modalContainer.classList.add('scale-100');
+          }, 10);
+          document.body.style.overflow = 'hidden';
+        };
+
+        const closeModal = () => {
+          modalContainer.classList.remove('scale-100');
+          modalContainer.classList.add('scale-95');
+          modal.classList.remove('opacity-100');
+          modal.classList.add('opacity-0', 'pointer-events-none');
+          setTimeout(() => {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+          }, 300);
+          document.body.style.overflow = '';
+        };
+
+        quoteBtns.forEach(btn => {
+          btn.removeEventListener('click', openModal);
+          btn.addEventListener('click', openModal);
+        });
+
+        closeModalBtn.addEventListener('click', closeModal);
+
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            closeModal();
+          }
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+            closeModal();
+          }
+        });
+
+        if (quoteForm) {
+          quoteForm.removeEventListener('quote-submitted', closeModal);
+          quoteForm.addEventListener('quote-submitted', closeModal);
+        }
+      }
+    }
+
+    setupGlobalQuoteModal();
+    document.addEventListener('astro:page-load', setupGlobalQuoteModal);
+  </script>
 </BaseLayout>
