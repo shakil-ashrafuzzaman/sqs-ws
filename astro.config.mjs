@@ -16,9 +16,14 @@ export default defineConfig({
   output: 'static',
 
   vite: {
+    resolve: {
+      alias: [
+        { find: /^lodash\/(.*)$/, replacement: 'lodash-es/$1' },
+        { find: 'lodash', replacement: 'lodash-es' }
+      ]
+    },
     plugins: [
-      tailwindcss(),
-      patchCjs()
+      tailwindcss()
     ],
     define: {},
     build: {
@@ -36,7 +41,12 @@ export default defineConfig({
         '@sanity/vision',
         'react',
         'react-dom',
-        'react/jsx-runtime'
+        'react/jsx-runtime',
+        'lodash/isObject',
+        'lodash/groupBy',
+        'lodash/keyBy',
+        'lodash/partition',
+        'lodash/sortedIndex'
       ]
     }
   },
