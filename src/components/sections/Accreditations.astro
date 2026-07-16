@@ -3,7 +3,7 @@ import Card from '@components/common/Card.astro';
 import Badge from '@components/common/Badge.astro';
 import { sanityClient, urlFor } from '@lib/sanity';
 
-const query = `*[_type == "accreditation"] | order(order asc) {
+const query = `*[_type == "certification"] | order(order asc) {
   name,
   shortName,
   description,
@@ -20,7 +20,7 @@ const accreditations = fetchedAccreditations && fetchedAccreditations.length > 0
     <div class="text-center max-w-3xl mx-auto flex flex-col items-center gap-4">
       <Badge variant="gold">Compliance & Certifications</Badge>
       <h2 class="font-display font-bold text-3xl md:text-4xl text-navy">
-        Industry-Leading <span class="text-gold-dark">Accreditations</span>
+        Industry-Leading <span class="text-gold-dark">Certifications</span>
       </h2>
       <p class="text-steel-dark text-lg leading-relaxed">
         SQS Security Service operates to the highest British Standards. We are rigorously audited by independent bodies to ensure our operational excellence, health & safety compliance, and data security are second to none.

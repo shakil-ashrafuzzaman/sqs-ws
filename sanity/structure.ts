@@ -96,7 +96,7 @@ export const structure: StructureResolver = (S) =>
         .child(S.documentTypeList('career').title('Current Opportunities')),
 
       S.listItem()
-        .title('Accreditations')
+        .title('Certifications')
         .icon(BadgeCheck)
-        .child(S.documentTypeList('accreditation').title('Accreditations & Certifications')),
+        .child(S.documentTypeList('certification').title('Certifications')),
     ])

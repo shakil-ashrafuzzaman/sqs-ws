@@ -76,9 +76,9 @@ if (breadcrumbSchema) {
   <Footer />
 
   <!-- Global Quick Quote Modal Dialog -->
-  <div id="quick-quote-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-dark/70 backdrop-blur-md hidden transition-all duration-300 opacity-0 pointer-events-none">
+  <div id="quick-quote-modal" class="fixed inset-0 z-50 flex items-start justify-center p-4 bg-navy-dark/70 backdrop-blur-md hidden transition-all duration-300 opacity-0 pointer-events-none overflow-y-auto">
     <!-- Modal Container -->
-    <div class="relative w-full max-w-2xl bg-white rounded-3xl p-6 md:p-10 shadow-2xl border border-border/80 flex flex-col gap-6 animate-fade-in-up transform scale-95 transition-all duration-300">
+    <div class="relative w-full max-w-2xl bg-white rounded-2xl md:rounded-3xl p-5 sm:p-8 md:p-10 shadow-2xl border border-border/80 flex flex-col gap-4 md:gap-6 animate-fade-in-up transform scale-95 transition-all duration-300 my-auto">
       <!-- Close Button -->
       <button id="close-quote-modal-btn" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 hover:scale-110 transition-all p-2 cursor-pointer z-20" aria-label="Close modal">
         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -97,8 +97,8 @@ if (breadcrumbSchema) {
       </div>
       
       <!-- Embedded Quick Quote Form -->
-      <div class="relative overflow-hidden min-h-[500px] sm:min-h-[420px] bg-[#f8f9fa] rounded-2xl p-4 md:p-6 border border-border/60">
-        <QuickQuoteForm class="relative overflow-hidden min-h-[480px] sm:min-h-[380px]" />
+      <div class="relative overflow-hidden min-h-[550px] sm:min-h-[460px] bg-[#f8f9fa] rounded-2xl p-4 md:p-6 border border-border/60">
+        <QuickQuoteForm class="relative overflow-hidden min-h-[520px] sm:min-h-[420px]" />
       </div>
     </div>
   </div>

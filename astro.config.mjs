@@ -3,8 +3,6 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@astrojs/react';
-import patchCjs from './patch-cjs.js';
-
 import sanity from '@sanity/astro';
 
 // https://astro.build/config

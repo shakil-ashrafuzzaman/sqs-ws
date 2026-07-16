@@ -18,7 +18,7 @@ import { faq } from './documents/faq'
 import { teamMember } from './documents/teamMember'
 import { career } from './documents/career'
 import { caseStudy } from './documents/caseStudy'
-import { accreditation } from './documents/accreditation'
+import { certification } from './documents/certification'
 import { contactInfo } from './documents/contactInfo'
 import { siteSettings } from './documents/siteSettings'
 
@@ -38,7 +38,7 @@ export const schemaTypes = [
   teamMember,
   career,
   caseStudy,
-  accreditation,
+  certification,
   contactInfo,
   siteSettings,
 ]
