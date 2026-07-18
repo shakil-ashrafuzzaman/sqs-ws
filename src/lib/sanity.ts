@@ -13,7 +13,7 @@ sanityClient.fetch = async (query: string, params?: any, options?: any) => {
   try {
     const result = await Promise.race([
       originalFetch(query, params, options),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('Sanity fetch timeout')), 1500))
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Sanity fetch timeout')), 10000))
     ]);
     return result;
   } catch (error) {

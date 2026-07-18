@@ -32,6 +32,7 @@ jobs:
         env:
           PUBLIC_SANITY_PROJECT_ID: ${{ secrets.PUBLIC_SANITY_PROJECT_ID }}
           PUBLIC_SANITY_DATASET: ${{ secrets.PUBLIC_SANITY_DATASET }}
+          PUBLIC_WEB3FORMS_KEY: ${{ secrets.PUBLIC_WEB3FORMS_KEY }}
 
       - name: 📂 Sync files via FTP to cPanel
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
