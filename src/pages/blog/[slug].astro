@@ -241,13 +241,13 @@ const articleSchema = {
     <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(19,45,85,0.8)_0%,rgba(7,20,41,1)_100%)]"></div>
     <div class="container relative z-10 max-w-4xl flex flex-col gap-6 text-center items-center animate-fade-in-up">
       <div class="flex items-center gap-2 mb-2">
-        <a href="/blog" class="text-steel-light hover:text-white transition-colors text-sm font-semibold">
+        <a href="/blog" class="!text-white hover:text-gold transition-colors text-sm font-semibold" style="color: #ffffff !important;">
           &larr; Back to Blog
         </a>
       </div>
       <Badge variant="gold">{post.category || 'Updates'}</Badge>
-      <h1 class="font-display font-black text-3xl md:text-5xl lg:text-6xl text-white leading-tight">
-        {post.title}
+      <h1 class="font-display font-black text-3xl md:text-5xl lg:text-6xl !text-white leading-tight drop-shadow-2xl" style="color: #ffffff !important;">
+        <span style="color: #ffffff !important;">{post.title}</span>
       </h1>
       
       <!-- Post Meta -->
