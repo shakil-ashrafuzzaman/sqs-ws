@@ -8,11 +8,13 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "serve": "node ./dist/server/entry.mjs",
     "astro": "astro",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
+    "@astrojs/node": "^11.0.2",
     "@astrojs/react": "^6.0.1",
     "@astrojs/sitemap": "^3.2.1",
     "@sanity/astro": "^3.4.2",

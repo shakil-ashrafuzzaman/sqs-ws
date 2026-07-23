@@ -197,44 +197,73 @@ const { class: className = "relative overflow-hidden min-h-[600px] sm:min-h-[520
         const selectedServices = Array.from(form.querySelectorAll('input[name="services"]:checked')).map((cb: any) => cb.value);
         data.services = selectedServices.join(', ');
 
-        data.access_key = (import.meta.env.PUBLIC_WEB3FORMS_KEY || "YOUR_WEB3FORMS_ACCESS_KEY_HERE").trim();
-        data.subject = "New Quick Quote Request from SQS Website";
-        data.from_name = "SQS Website";
+        let sent = false;
 
+        // 1. Try sending via Astro SSR Resend API route
         try {
-          const response = await fetch('https://api.web3forms.com/submit', {
+          const resendResp = await fetch('/api/send-email', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify(data),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: data.name,
+              email: data.email,
+              phone: data.phone,
+              service: `Property: ${data.property_type || 'N/A'} | Services: ${data.services || 'N/A'}`,
+              message: data.notes || 'Quick Quote Request submitted via website'
+            }),
           });
-
-          if (response.status === 200) {
-            alert('Quote request sent successfully! We will contact you soon.');
-            (form as HTMLFormElement).reset();
-            
-            // Reset view to Step 1
-            if (step1 && step3) {
-              step3.classList.add('translate-x-full', 'invisible');
-              step3.classList.remove('translate-x-0', 'z-10');
-              
-              step1.classList.remove('-translate-x-full', 'invisible');
-              step1.classList.add('translate-x-0', 'z-10');
-            }
-
-            // Custom event to notify modal parent to close if necessary
-            form.dispatchEvent(new CustomEvent('quote-submitted'));
-          } else {
-            alert('An error occurred while sending your request. Please try again.');
+          const resendResult = await resendResp.json().catch(() => null);
+          if (resendResp.ok && resendResult && resendResult.success) {
+            sent = true;
           }
         } catch (err) {
-          alert('A network error occurred. Please check your connection and try again.');
-        } finally {
-          submitBtn.innerHTML = originalText;
-          submitBtn.disabled = false;
+          // Fail silently to try fallback
         }
+
+        // 2. Fallback to Web3Forms if Resend API failed or not configured
+        if (!sent) {
+          data.access_key = (import.meta.env.PUBLIC_WEB3FORMS_KEY || "YOUR_WEB3FORMS_ACCESS_KEY_HERE").trim();
+          data.subject = "New Quick Quote Request from SQS Website";
+          data.from_name = "SQS Website";
+
+          try {
+            const response = await fetch('https://api.web3forms.com/submit', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              },
+              body: JSON.stringify(data),
+            });
+            if (response.status === 200) {
+              sent = true;
+            }
+          } catch (err) {
+            // Network error
+          }
+        }
+
+        if (sent) {
+          alert('Quote request sent successfully! We will contact you soon.');
+          (form as HTMLFormElement).reset();
+          
+          // Reset view to Step 1
+          if (step1 && step3) {
+            step3.classList.add('translate-x-full', 'invisible');
+            step3.classList.remove('translate-x-0', 'z-10');
+            
+            step1.classList.remove('-translate-x-full', 'invisible');
+            step1.classList.add('translate-x-0', 'z-10');
+          }
+
+          // Custom event to notify modal parent to close if necessary
+          form.dispatchEvent(new CustomEvent('quote-submitted'));
+        } else {
+          alert('An error occurred while sending your request. Please try again.');
+        }
+
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
       });
     });
   }

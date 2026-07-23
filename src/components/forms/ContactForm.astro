@@ -154,26 +154,53 @@ const { class: className = "bg-white p-8 rounded-xl shadow-card border border-bo
       const formData = new FormData(form);
       const data = Object.fromEntries(formData.entries());
       
-       // Web3Forms Configuration
-       // IMPORTANT: Replace the access_key below with your real key from https://web3forms.com/
-       // or define PUBLIC_WEB3FORMS_KEY in your .env file
-       data.access_key = (import.meta.env.PUBLIC_WEB3FORMS_KEY || "YOUR_WEB3FORMS_ACCESS_KEY_HERE").trim();
-       data.subject = "New Form Submission from SQS Security";
-       data.from_name = "SQS Website";
+        let sent = false;
 
-      try {
-        const response = await fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify(data),
-        });
+        // 1. Try sending via Astro SSR Resend API route
+        try {
+          const resendResp = await fetch('/api/send-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: data.name,
+              email: data.email,
+              phone: data.phone,
+              service: data.service,
+              message: data.message
+            }),
+          });
+          const resendResult = await resendResp.json().catch(() => null);
+          if (resendResp.ok && resendResult && resendResult.success) {
+            sent = true;
+          }
+        } catch (err) {
+          // Fail silently to try fallback
+        }
 
-        const result = await response.json();
+        // 2. Fallback to Web3Forms if Resend is not configured or failed
+        if (!sent) {
+          data.access_key = (import.meta.env.PUBLIC_WEB3FORMS_KEY || "YOUR_WEB3FORMS_ACCESS_KEY_HERE").trim();
+          data.subject = "New Form Submission from SQS Security";
+          data.from_name = "SQS Website";
 
-        if (response.status === 200) {
+          try {
+            const response = await fetch('https://api.web3forms.com/submit', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              },
+              body: JSON.stringify(data),
+            });
+            if (response.status === 200) {
+              sent = true;
+            }
+          } catch (err) {
+            // Network error
+          }
+        }
+
+        if (sent) {
           // Success
           form.reset();
           alertsContainer.classList.remove('hidden');
@@ -186,17 +213,10 @@ const { class: className = "bg-white p-8 rounded-xl shadow-card border border-bo
           alertsContainer.classList.add('flex');
           alertError.classList.remove('hidden');
           alertError.classList.add('flex');
-          errorMessageEl.textContent = result.message || 'An unexpected error occurred. Please try again.';
+          errorMessageEl.textContent = 'An error occurred while submitting your enquiry. Please try again.';
         }
-      } catch (err) {
-        alertsContainer.classList.remove('hidden');
-        alertsContainer.classList.add('flex');
-        alertError.classList.remove('hidden');
-        alertError.classList.add('flex');
-        errorMessageEl.textContent = 'A network error occurred. Please check your connection and try again.';
-      } finally {
+
         setSubmitting(false);
-      }
     });
   }
 </script>

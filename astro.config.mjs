@@ -5,13 +5,18 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@astrojs/react';
 import sanity from '@sanity/astro';
 
+import node from '@astrojs/node';
+
 // https://astro.build/config
 export default defineConfig({
   // Site domain for canonical URLs and sitemap
   site: 'https://sqssecurity.co.uk',
 
-  // Static Site Generation (SSG) mode for cPanel standard hosting
-  output: 'static',
+  // Server-Side Rendering (SSR) mode with Node.js standalone server
+  output: 'server',
+  adapter: node({
+    mode: 'standalone'
+  }),
 
   vite: {
     resolve: {
