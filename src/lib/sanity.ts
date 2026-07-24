@@ -1,10 +1,20 @@
 import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 
+function getEnvVar(key: string, defaultValue: string = ''): string {
+  if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env[key]) {
+    return import.meta.env[key];
+  }
+  if (typeof process !== 'undefined' && process.env && process.env[key]) {
+    return process.env[key] || defaultValue;
+  }
+  return defaultValue;
+}
+
 export const sanityClient = createClient({
-  projectId: import.meta.env.PUBLIC_SANITY_PROJECT_ID || 'k4vpp9e5',
-  dataset: import.meta.env.PUBLIC_SANITY_DATASET || 'production',
-  useCdn: true, // Use CDN to prevent network hanging in this environment
+  projectId: getEnvVar('PUBLIC_SANITY_PROJECT_ID', 'k4vpp9e5'),
+  dataset: getEnvVar('PUBLIC_SANITY_DATASET', 'production'),
+  useCdn: getEnvVar('SANITY_USE_CDN', 'true') === 'true',
   apiVersion: '2024-01-01',
 });
 
