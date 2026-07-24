@@ -20,9 +20,9 @@ export const EMAIL_CONFIG = {
   /** Main operations inbox */
   get to() { return getEnvVar('CONTACT_EMAIL_TO', 'info@sqssecurity.co.uk'); },
   /** Verified sender domain */
-  from: 'SQS Security <noreply@sqssecurity.co.uk>',
+  from: 'SQS Security Service <noreply@sqssecurity.co.uk>',
   /** Email subject prefix */
-  subjectPrefix: '[SQS Security]',
+  subjectPrefix: '[SQS Security Service]',
 } as const;
 
 /**
@@ -65,7 +65,7 @@ export async function sendConfirmationEmail(
   await resend.emails.send({
     from: EMAIL_CONFIG.from,
     to: data.email,
-    subject: 'Thank you for contacting SQS Security',
+    subject: 'Thank you for contacting SQS Security Service',
     html: buildConfirmationEmail(data),
   });
 }
@@ -78,7 +78,7 @@ function buildNotificationEmail(data: ContactEmailPayload): string {
     <body style="font-family: Arial, sans-serif; background: #F8FAFC; padding: 32px;">
       <div style="max-width: 600px; margin: 0 auto; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid #E2E8F0;">
         <div style="background: #0B1F3A; padding: 24px; text-align: center;">
-          <h1 style="color: #D4AF37; margin: 0; font-size: 24px;">SQS Security</h1>
+          <h1 style="color: #D4AF37; margin: 0; font-size: 24px;">SQS Security Service</h1>
           <p style="color: #94A3B8; margin: 4px 0 0;">New Website Enquiry Received</p>
         </div>
         <div style="padding: 32px;">
@@ -124,16 +124,16 @@ function buildConfirmationEmail(data: ContactEmailPayload): string {
     <body style="font-family: Arial, sans-serif; background: #F8FAFC; padding: 32px;">
       <div style="max-width: 600px; margin: 0 auto; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid #E2E8F0;">
         <div style="background: #0B1F3A; padding: 24px; text-align: center;">
-          <h1 style="color: #D4AF37; margin: 0; font-size: 24px;">SQS Security</h1>
+          <h1 style="color: #D4AF37; margin: 0; font-size: 24px;">SQS Security Service</h1>
           <p style="color: #94A3B8; margin: 4px 0 0;">Protecting People, Property & Business</p>
         </div>
         <div style="padding: 32px;">
-          <h2 style="color: #0B1F3A; margin-top: 0;">Thank you, ${data.name}!</h2>
-          <p style="color: #475569; line-height: 1.75;">We have received your enquiry and a member of our team will be in touch within <strong>2 business hours</strong>.</p>
-          <p style="color: #475569; line-height: 1.75;">For urgent security matters, please call us directly on <a href="tel:+44XXXXXXXXXX" style="color: #D4AF37; font-weight: bold;">0800 XXX XXXX</a>.</p>
+          <h2 style="color: #0B1F3A; margin-top: 0;">Thank you for contacting SQS Security Service</h2>
+          <p style="color: #475569; line-height: 1.75;">We have received your enquiry, a member of our team will be in touch within <strong>one business hour</strong>.</p>
+          <p style="color: #475569; line-height: 1.75;">For urgent security matters, please call us directly on <a href="tel:03334444045" style="color: #D4AF37; font-weight: bold;">0333 444 4045</a>.</p>
         </div>
         <div style="background: #0B1F3A; padding: 24px; text-align: center;">
-          <p style="color: #94A3B8; font-size: 12px; margin: 0;">SQS Security | 86 Brintons Road, Southampton, Hampshire | sqssecurity.co.uk</p>
+          <p style="color: #94A3B8; font-size: 12px; margin: 0;">SQS Security Service | 86 Brintons Road, Southampton, Hampshire | sqssecurity.co.uk</p>
         </div>
       </div>
     </body>
