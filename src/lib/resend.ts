@@ -4,21 +4,19 @@ import { Resend } from 'resend';
  * Resend Email Client for SQS Security
  * Handles contact form notifications to operations team
  */
-function getEnvVar(key: string, defaultValue: string = ''): string {
-  if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env[key]) {
-    return import.meta.env[key];
-  }
-  if (typeof process !== 'undefined' && process.env && process.env[key]) {
-    return process.env[key] || defaultValue;
-  }
-  return defaultValue;
-}
+const getResendApiKey = (): string => {
+  return import.meta.env.RESEND_API_KEY || (typeof process !== 'undefined' ? process.env.RESEND_API_KEY : '') || '';
+};
 
-export const resend = new Resend(getEnvVar('RESEND_API_KEY'));
+const getContactEmailTo = (): string => {
+  return import.meta.env.CONTACT_EMAIL_TO || (typeof process !== 'undefined' ? process.env.CONTACT_EMAIL_TO : '') || 'info@sqssecurity.co.uk';
+};
+
+export const resend = new Resend(getResendApiKey());
 
 export const EMAIL_CONFIG = {
   /** Main operations inbox */
-  get to() { return getEnvVar('CONTACT_EMAIL_TO', 'info@sqssecurity.co.uk'); },
+  get to() { return getContactEmailTo(); },
   /** Verified sender domain */
   from: 'SQS Security Service <noreply@sqssecurity.co.uk>',
   /** Email subject prefix */
