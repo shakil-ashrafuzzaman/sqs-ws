@@ -5,11 +5,23 @@ import { Resend } from 'resend';
  * Handles contact form notifications to operations team
  */
 const getResendApiKey = (): string => {
-  return import.meta.env.RESEND_API_KEY || (typeof process !== 'undefined' ? process.env.RESEND_API_KEY : '') || '';
+  if (typeof import.meta !== 'undefined' && import.meta?.env?.RESEND_API_KEY) {
+    return import.meta.env.RESEND_API_KEY;
+  }
+  if (typeof process !== 'undefined' && process.env?.RESEND_API_KEY) {
+    return process.env.RESEND_API_KEY;
+  }
+  return '';
 };
 
 const getContactEmailTo = (): string => {
-  return import.meta.env.CONTACT_EMAIL_TO || (typeof process !== 'undefined' ? process.env.CONTACT_EMAIL_TO : '') || 'info@sqssecurity.co.uk';
+  if (typeof import.meta !== 'undefined' && import.meta?.env?.CONTACT_EMAIL_TO) {
+    return import.meta.env.CONTACT_EMAIL_TO;
+  }
+  if (typeof process !== 'undefined' && process.env?.CONTACT_EMAIL_TO) {
+    return process.env.CONTACT_EMAIL_TO;
+  }
+  return 'info@sqssecurity.co.uk';
 };
 
 export const resend = new Resend(getResendApiKey());
