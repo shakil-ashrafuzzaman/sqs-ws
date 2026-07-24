@@ -6,7 +6,7 @@ export const prerender = false;
 export const POST: APIRoute = async ({ request }) => {
   try {
     const data = await request.json();
-    const { name, email, phone, service, message } = data;
+    const { name, email, phone, service, message, subject } = data;
 
     if (!name || !email || !message) {
       return new Response(
@@ -21,14 +21,24 @@ export const POST: APIRoute = async ({ request }) => {
       phone,
       service,
       message,
+      subject,
       submittedAt: new Date().toLocaleString('en-GB', { timeZone: 'Europe/London' }),
     };
 
-    // Send admin notification and enquirer confirmation concurrently
-    await Promise.all([
+    // Send admin notification to info@sqssecurity.co.uk and enquirer confirmation concurrently
+    const [adminResult, userResult] = await Promise.allSettled([
       sendContactNotification(payload),
       sendConfirmationEmail(payload),
     ]);
+
+    if (adminResult.status === 'rejected') {
+      console.error('Admin Email Notification Error:', adminResult.reason);
+      throw adminResult.reason;
+    }
+
+    if (userResult.status === 'rejected') {
+      console.warn('User Email Confirmation Error (Admin notification succeeded):', userResult.reason);
+    }
 
     return new Response(
       JSON.stringify({ success: true, message: 'Email sent successfully via Resend.' }),

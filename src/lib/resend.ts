@@ -22,7 +22,7 @@ export const EMAIL_CONFIG = {
   /** Verified sender domain */
   from: 'SQS Security <noreply@sqssecurity.co.uk>',
   /** Email subject prefix */
-  subjectPrefix: '[SQS Security Enquiry]',
+  subjectPrefix: '[SQS Security]',
 } as const;
 
 /**
@@ -35,6 +35,7 @@ export interface ContactEmailPayload {
   service?: string;
   message: string;
   submittedAt: string;
+  subject?: string;
 }
 
 /**
@@ -43,10 +44,14 @@ export interface ContactEmailPayload {
 export async function sendContactNotification(
   data: ContactEmailPayload,
 ): Promise<void> {
+  const emailSubject = data.subject
+    ? `${EMAIL_CONFIG.subjectPrefix} ${data.subject}`
+    : `${EMAIL_CONFIG.subjectPrefix} New enquiry from ${data.name}`;
+
   await resend.emails.send({
     from: EMAIL_CONFIG.from,
     to: EMAIL_CONFIG.to,
-    subject: `${EMAIL_CONFIG.subjectPrefix} New enquiry from ${data.name}`,
+    subject: emailSubject,
     html: buildNotificationEmail(data),
   });
 }

@@ -209,7 +209,8 @@ const { class: className = "relative overflow-hidden min-h-[600px] sm:min-h-[520
               email: data.email,
               phone: data.phone,
               service: `Property: ${data.property_type || 'N/A'} | Services: ${data.services || 'N/A'}`,
-              message: data.notes || 'Quick Quote Request submitted via website'
+              message: data.notes || 'Quick Quote Request submitted via website',
+              subject: 'New Quote Request (Quick Quote Request)'
             }),
           });
           const resendResult = await resendResp.json().catch(() => null);

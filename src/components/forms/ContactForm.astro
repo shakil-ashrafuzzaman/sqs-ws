@@ -166,7 +166,8 @@ const { class: className = "bg-white p-8 rounded-xl shadow-card border border-bo
               email: data.email,
               phone: data.phone,
               service: data.service,
-              message: data.message
+              message: data.message,
+              subject: 'New Message Enquiry (Send us a message)'
             }),
           });
           const resendResult = await resendResp.json().catch(() => null);
