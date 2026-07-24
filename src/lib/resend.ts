@@ -48,12 +48,18 @@ export async function sendContactNotification(
     ? `${EMAIL_CONFIG.subjectPrefix} ${data.subject}`
     : `${EMAIL_CONFIG.subjectPrefix} New enquiry from ${data.name}`;
 
-  await resend.emails.send({
+  const { data: resData, error } = await resend.emails.send({
     from: EMAIL_CONFIG.from,
-    to: EMAIL_CONFIG.to,
+    to: [EMAIL_CONFIG.to],
+    replyTo: data.email,
     subject: emailSubject,
     html: buildNotificationEmail(data),
   });
+
+  if (error) {
+    console.error('Resend Admin Notification Error:', error);
+    throw new Error(`Admin email delivery failed: ${error.message}`);
+  }
 }
 
 /**
@@ -62,12 +68,18 @@ export async function sendContactNotification(
 export async function sendConfirmationEmail(
   data: ContactEmailPayload,
 ): Promise<void> {
-  await resend.emails.send({
+  const { data: resData, error } = await resend.emails.send({
     from: EMAIL_CONFIG.from,
-    to: data.email,
+    to: [data.email],
+    replyTo: EMAIL_CONFIG.to,
     subject: 'Thank you for contacting SQS Security Service',
     html: buildConfirmationEmail(data),
   });
+
+  if (error) {
+    console.error('Resend Visitor Confirmation Email Error:', error);
+    throw new Error(`Visitor confirmation email delivery failed: ${error.message}`);
+  }
 }
 
 function buildNotificationEmail(data: ContactEmailPayload): string {
