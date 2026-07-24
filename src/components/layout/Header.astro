@@ -233,7 +233,7 @@ const isActive = (href) => {
         return (
         <div class="flex flex-col border-b border-light last:border-0 pb-2">
           {link.dropdown ? (
-            <details class="group/accordion">
+            <details class="group/accordion" data-href={link.href}>
               <summary class="flex justify-between items-center py-2 font-bold cursor-pointer list-none [&::-webkit-details-marker]:hidden">
                 <span class={`transition-colors ${active ? 'text-gold' : 'hover:text-[#20B2AA]'}`}>{link.name}</span>
                 <svg class="w-5 h-5 text-steel transition-transform duration-300 group-open/accordion:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -291,4 +291,21 @@ const isActive = (href) => {
       }
     });
   }
+
+  // Mobile menu accordion second-click navigation (e.g. Services -> /services)
+  const mobileDetails = document.querySelectorAll('#mobile-menu details');
+  mobileDetails.forEach((detailsElement) => {
+    const details = detailsElement as HTMLDetailsElement;
+    const summary = details.querySelector('summary');
+    const href = details.getAttribute('data-href');
+
+    if (summary && href && href !== '#') {
+      summary.addEventListener('click', (e) => {
+        if (details.open) {
+          e.preventDefault();
+          window.location.href = href;
+        }
+      });
+    }
+  });
 </script>
