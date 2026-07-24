@@ -5,6 +5,8 @@ import Button from '@components/common/Button.astro';
 import Card from '@components/common/Card.astro';
 import { sanityClient } from '@lib/sanity';
 
+export const prerender = true;
+
 export async function getStaticPaths() {
   const areas = [
     {

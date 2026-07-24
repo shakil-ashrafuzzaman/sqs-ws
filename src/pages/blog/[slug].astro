@@ -6,6 +6,8 @@ import Button from '@components/common/Button.astro';
 import { sanityClient, urlFor } from '@lib/sanity';
 import { PortableText } from 'astro-portabletext';
 
+export const prerender = true;
+
 export async function getStaticPaths() {
   const blogQuery = `*[_type == "blogPost"] | order(publishedAt desc) {
     "slug": slug.current,
