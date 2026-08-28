@@ -95,7 +95,17 @@ export async function getStaticPaths() {
 
   const fetchedSlugs = new Set((fetchedServices || []).map((s: any) => s.slug));
   const uniqueFallbackServices = fallbackServices.filter(s => !fetchedSlugs.has(s.slug));
-  const services = [...(fetchedServices || []), ...uniqueFallbackServices];
+  const services = [...(fetchedServices || []), ...uniqueFallbackServices].map((s: any) => {
+    // Normalize faqs from Sanity (which might have {question, answer}) to {q, a} format
+    const normalizedFaqs = (s.faqs || []).map((faq: any) => ({
+      q: faq.question || faq.q || '',
+      a: faq.answer || faq.a || ''
+    }));
+    return {
+      ...s,
+      faqs: normalizedFaqs
+    };
+  });
 
   const contactInfo = await sanityClient.fetch(`*[_type == "contactInfo"][0]{
     phone,
@@ -222,7 +232,11 @@ const schema = faqSchema ? [serviceSchema, faqSchema] : serviceSchema;
       <div class="lg:col-span-8 flex flex-col gap-10">
         <div class="prose prose-lg prose-slate max-w-none text-steel-dark">
           <h2 class="font-display text-navy text-3xl font-bold">About this service</h2>
-          <p class="leading-loose">{service.content}</p>
+          {service.body ? (
+            <div class="leading-loose"><PortableText value={service.body} /></div>
+          ) : (
+            <p class="leading-loose">{service.content}</p>
+          )}
         </div>
 
         <div>

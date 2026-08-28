@@ -21,6 +21,7 @@ import { caseStudy } from './documents/caseStudy'
 import { certification } from './documents/certification'
 import { contactInfo } from './documents/contactInfo'
 import { siteSettings } from './documents/siteSettings'
+import { category } from './documents/category'
 
 export const schemaTypes = [
   // Objects (registered first — documents may reference them)
@@ -41,4 +42,5 @@ export const schemaTypes = [
   certification,
   contactInfo,
   siteSettings,
+  category,
 ]

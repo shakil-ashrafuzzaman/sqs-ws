@@ -7,7 +7,7 @@ import ContactForm from '@components/forms/ContactForm.astro';
 import QuickQuoteForm from '@components/forms/QuickQuoteForm.astro';
 import { sanityClient, urlFor } from '@lib/sanity';
 
-const [siteSettings, fetchedServices, contactInfo, fetchedCertifications] = await Promise.all([
+const [siteSettings, fetchedServices, contactInfo, fetchedCertifications, fetchedTestimonials, fetchedFaqs] = await Promise.all([
   sanityClient.fetch(`*[_type == "siteSettings"][0]{
     tagline,
     "heroVideoUrl": heroVideo.asset->url,
@@ -36,6 +36,18 @@ const [siteSettings, fetchedServices, contactInfo, fetchedCertifications] = awai
     name,
     shortName,
     description
+  }`).catch(() => []),
+  sanityClient.fetch(`*[_type == "testimonial" && featured == true] | order(_createdAt desc) {
+    clientName,
+    clientTitle,
+    company,
+    quote,
+    rating
+  }`).catch(() => []),
+  sanityClient.fetch(`*[_type == "faq" && featured == true] | order(order asc) {
+    question,
+    answer,
+    category
   }`).catch(() => [])
 ]);
 
@@ -153,6 +165,73 @@ const fallbackCertifications = [
 const certifications = fetchedCertifications && fetchedCertifications.length > 0
   ? fetchedCertifications
   : fallbackCertifications;
+
+const fallbackTestimonials = [
+  {
+    clientName: 'John Doe',
+    clientTitle: 'Operations Manager',
+    company: 'BuildTrust Construction',
+    quote: 'SQS Security has serviced our sites for several years, always demonstrating professionalism with a personal touch. Problems are handled efficiently.',
+  },
+  {
+    clientName: 'Sarah Mitchell',
+    clientTitle: 'Facilities Director',
+    company: 'Global Logistics Network',
+    quote: 'Since changing our security systems over to SQS, we have built a great working relationship. Their guards are extremely professional. Response times are second to none.',
+  },
+  {
+    clientName: 'David Turner',
+    clientTitle: 'Site Manager',
+    company: 'Northern Build Ltd',
+    quote: 'SQS provided our project with 24-hour security and access control. The service has been exemplary, from the standard of guards to emergency call outs.',
+  },
+  {
+    clientName: 'Emma Hayes',
+    clientTitle: 'Logistics Head',
+    company: 'Midland Distribution',
+    quote: 'Highly reliable and trustworthy security partner. We rely on their mobile patrols every night, and they have successfully prevented multiple intrusions.',
+  },
+  {
+    clientName: 'Richard Jones',
+    clientTitle: 'Property Manager',
+    company: 'Sussex Retail Co.',
+    quote: 'The waking watch team from SQS was deployed within hours. Their rapid response and professional demeanor gave our residents total peace of mind.',
+  }
+];
+
+const testimonials = fetchedTestimonials && fetchedTestimonials.length > 0
+  ? fetchedTestimonials
+  : fallbackTestimonials;
+
+const fallbackFaqs = [
+  {
+    question: "Are all your security guards SIA licensed?",
+    answer: "Yes. Every security officer we deploy holds a current SIA (Security Industry Authority) licence. This is a legal requirement in the UK and ensures our personnel have passed rigorous identity checks, criminal record checks, and relevant security training."
+  },
+  {
+    question: "Do you provide emergency or short-notice cover?",
+    answer: "Absolutely. We understand that security gaps happen without warning. SQS Security responds quickly to urgent cover requests, providing SIA-licensed officers without complicated procurement delays."
+  },
+  {
+    question: "What kind of reporting do you provide?",
+    answer: "We provide clear, written reporting for every deployment. Shift reports, access logs, and incident records are delivered to clients after every assignment, so you never have to chase us for documentation."
+  },
+  {
+    question: "Do you cover my specific area?",
+    answer: "While our headquarters is based in Southampton, we provide comprehensive, UK-wide deployment. Whether you are in London, Manchester, Brighton, or Birmingham, we have local experts ready to secure your premises."
+  }
+];
+
+const faqs = fetchedFaqs && fetchedFaqs.length > 0
+  ? fetchedFaqs
+  : fallbackFaqs;
+
+const faqStyles = [
+  { border: 'border-l-blue-500 hover:border-l-blue-600', text: 'group-hover:text-blue-600', arrowBg: 'bg-blue-50 text-blue-600' },
+  { border: 'border-l-gold hover:border-l-gold-dark', text: 'group-hover:text-gold-dark', arrowBg: 'bg-gold/10 text-gold-dark' },
+  { border: 'border-l-teal-500 hover:border-l-teal-600', text: 'group-hover:text-teal-600', arrowBg: 'bg-teal-50 text-teal-600' },
+  { border: 'border-l-purple-500 hover:border-l-purple-600', text: 'group-hover:text-purple-600', arrowBg: 'bg-purple-50 text-purple-600' }
+];
 
 // Generate Organization & LocalBusiness Schema
 const organizationSchema = {
@@ -393,61 +472,26 @@ const pageSchema = [organizationSchema];
         <div class="flex animate-marquee group-hover:[animation-play-state:paused] gap-4 sm:gap-8 py-4">
           {[1, 2].map(() => (
             <div class="flex gap-4 sm:gap-8 shrink-0">
-              <!-- Testimonial 1 -->
-              <div class="w-[85vw] sm:w-[350px] md:w-[400px] shrink-0 bg-white p-6 md:p-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-2 border-gold/60 hover:border-gold hover:shadow-[0_15px_40px_rgba(212,175,55,0.2)] transition-all duration-300 relative flex flex-col transform hover:-translate-y-1">
-                <div class="absolute -top-4 -right-4 w-20 h-20 bg-gold/10 rounded-full blur-2xl pointer-events-none"></div>
-                <p class="text-steel-dark text-sm md:text-base leading-relaxed mb-6 md:mb-8 relative z-10 italic flex-grow font-medium">
-                  "SQS Security has serviced our sites for several years, always demonstrating professionalism with a personal touch. Problems are handled efficiently."
-                </p>
-                <div class="flex items-center gap-4 mt-auto">
-                  <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-tr from-gold to-yellow-300 flex items-center justify-center text-white font-black text-base md:text-lg shadow-md">JD</div>
-                  <div><p class="font-bold text-navy text-sm md:text-base">John Doe</p><p class="text-xs md:text-sm text-steel">Operations Manager</p></div>
-                </div>
-              </div>
-              <!-- Testimonial 2 -->
-              <div class="w-[85vw] sm:w-[350px] md:w-[400px] shrink-0 bg-white p-6 md:p-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-2 border-gold/60 hover:border-gold hover:shadow-[0_15px_40px_rgba(212,175,55,0.2)] transition-all duration-300 relative flex flex-col transform hover:-translate-y-1">
-                <div class="absolute -top-4 -right-4 w-20 h-20 bg-gold/10 rounded-full blur-2xl pointer-events-none"></div>
-                <p class="text-steel-dark text-sm md:text-base leading-relaxed mb-6 md:mb-8 relative z-10 italic flex-grow font-medium">
-                  "Since changing our security systems over to SQS, we have built a great working relationship. Their guards are extremely professional. Response times are second to none."
-                </p>
-                <div class="flex items-center gap-4 mt-auto">
-                  <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-tr from-gold to-yellow-300 flex items-center justify-center text-white font-black text-base md:text-lg shadow-md">SM</div>
-                  <div><p class="font-bold text-navy text-sm md:text-base">Sarah Mitchell</p><p class="text-xs md:text-sm text-steel">Facilities Director</p></div>
-                </div>
-              </div>
-              <!-- Testimonial 3 -->
-              <div class="w-[85vw] sm:w-[350px] md:w-[400px] shrink-0 bg-white p-6 md:p-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-2 border-gold/60 hover:border-gold hover:shadow-[0_15px_40px_rgba(212,175,55,0.2)] transition-all duration-300 relative flex flex-col transform hover:-translate-y-1">
-                <div class="absolute -top-4 -right-4 w-20 h-20 bg-gold/10 rounded-full blur-2xl pointer-events-none"></div>
-                <p class="text-steel-dark text-sm md:text-base leading-relaxed mb-6 md:mb-8 relative z-10 italic flex-grow font-medium">
-                  "SQS provided our project with 24-hour security and access control. The service has been exemplary, from the standard of guards to emergency call outs."
-                </p>
-                <div class="flex items-center gap-4 mt-auto">
-                  <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-tr from-gold to-yellow-300 flex items-center justify-center text-white font-black text-base md:text-lg shadow-md">DT</div>
-                  <div><p class="font-bold text-navy text-sm md:text-base">David Turner</p><p class="text-xs md:text-sm text-steel">Site Manager</p></div>
-                </div>
-              </div>
-              <!-- Testimonial 4 -->
-              <div class="w-[85vw] sm:w-[350px] md:w-[400px] shrink-0 bg-white p-6 md:p-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-2 border-gold/60 hover:border-gold hover:shadow-[0_15px_40px_rgba(212,175,55,0.2)] transition-all duration-300 relative flex flex-col transform hover:-translate-y-1">
-                <div class="absolute -top-4 -right-4 w-20 h-20 bg-gold/10 rounded-full blur-2xl pointer-events-none"></div>
-                <p class="text-steel-dark text-sm md:text-base leading-relaxed mb-6 md:mb-8 relative z-10 italic flex-grow font-medium">
-                  "Highly reliable and trustworthy security partner. We rely on their mobile patrols every night, and they have successfully prevented multiple intrusions."
-                </p>
-                <div class="flex items-center gap-4 mt-auto">
-                  <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-tr from-gold to-yellow-300 flex items-center justify-center text-white font-black text-base md:text-lg shadow-md">EH</div>
-                  <div><p class="font-bold text-navy text-sm md:text-base">Emma Hayes</p><p class="text-xs md:text-sm text-steel">Logistics Head</p></div>
-                </div>
-              </div>
-              <!-- Testimonial 5 -->
-              <div class="w-[85vw] sm:w-[350px] md:w-[400px] shrink-0 bg-white p-6 md:p-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-2 border-gold/60 hover:border-gold hover:shadow-[0_15px_40px_rgba(212,175,55,0.2)] transition-all duration-300 relative flex flex-col transform hover:-translate-y-1">
-                <div class="absolute -top-4 -right-4 w-20 h-20 bg-gold/10 rounded-full blur-2xl pointer-events-none"></div>
-                <p class="text-steel-dark text-sm md:text-base leading-relaxed mb-6 md:mb-8 relative z-10 italic flex-grow font-medium">
-                  "The waking watch team from SQS was deployed within hours. Their rapid response and professional demeanor gave our residents total peace of mind."
-                </p>
-                <div class="flex items-center gap-4 mt-auto">
-                  <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-tr from-gold to-yellow-300 flex items-center justify-center text-white font-black text-base md:text-lg shadow-md">RJ</div>
-                  <div><p class="font-bold text-navy text-sm md:text-base">Richard Jones</p><p class="text-xs md:text-sm text-steel">Property Manager</p></div>
-                </div>
-              </div>
+              {testimonials.map((t: any) => {
+                const initials = t.clientName.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase();
+                return (
+                  <div class="w-[85vw] sm:w-[350px] md:w-[400px] shrink-0 bg-white p-6 md:p-8 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-2 border-gold/60 hover:border-gold hover:shadow-[0_15px_40px_rgba(212,175,55,0.2)] transition-all duration-300 relative flex flex-col transform hover:-translate-y-1">
+                    <div class="absolute -top-4 -right-4 w-20 h-20 bg-gold/10 rounded-full blur-2xl pointer-events-none"></div>
+                    <p class="text-steel-dark text-sm md:text-base leading-relaxed mb-6 md:mb-8 relative z-10 italic flex-grow font-medium">
+                      "{t.quote}"
+                    </p>
+                    <div class="flex items-center gap-4 mt-auto">
+                      <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-tr from-gold to-yellow-300 flex items-center justify-center text-white font-black text-base md:text-lg shadow-md">{initials}</div>
+                      <div>
+                        <p class="font-bold text-navy text-sm md:text-base">{t.clientName}</p>
+                        <p class="text-xs md:text-sm text-steel">
+                          {t.clientTitle}{t.company ? ` / ${t.company}` : ''}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           ))}
         </div>
@@ -561,57 +605,22 @@ const pageSchema = [organizationSchema];
       </div>
 
       <div class="flex flex-col gap-4 md:gap-5">
-        <!-- FAQ Item 1 -->
-        <details class="group bg-white rounded-xl shadow-sm border border-border border-l-[6px] border-l-blue-500 hover:border-l-blue-600 hover:shadow-md transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
-          <summary class="flex items-center justify-between cursor-pointer p-4 md:p-6 font-display font-bold text-base md:text-lg text-navy">
-            <span class="group-hover:text-blue-600 transition-colors pr-4 leading-snug">Are all your security guards SIA licensed?</span>
-            <span class="transition group-open:rotate-180 bg-blue-50 text-blue-600 p-1.5 md:p-2 rounded-full shrink-0">
-              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-5 h-5 md:w-6 md:h-6"><path d="M6 9l6 6 6-6"></path></svg>
-            </span>
-          </summary>
-          <div class="px-4 md:px-6 pb-4 md:pb-6 text-steel text-sm md:text-base leading-relaxed border-t border-border pt-3 md:pt-4 mt-1 md:mt-2">
-            Yes. Every security officer we deploy holds a current SIA (Security Industry Authority) licence. This is a legal requirement in the UK and ensures our personnel have passed rigorous identity checks, criminal record checks, and relevant security training.
-          </div>
-        </details>
-
-        <!-- FAQ Item 2 -->
-        <details class="group bg-white rounded-xl shadow-sm border border-border border-l-[6px] border-l-gold hover:border-l-gold-dark hover:shadow-md transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
-          <summary class="flex items-center justify-between cursor-pointer p-4 md:p-6 font-display font-bold text-base md:text-lg text-navy">
-            <span class="group-hover:text-gold-dark transition-colors pr-4 leading-snug">Do you provide emergency or short-notice cover?</span>
-            <span class="transition group-open:rotate-180 bg-gold/10 text-gold-dark p-1.5 md:p-2 rounded-full shrink-0">
-              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-5 h-5 md:w-6 md:h-6"><path d="M6 9l6 6 6-6"></path></svg>
-            </span>
-          </summary>
-          <div class="px-4 md:px-6 pb-4 md:pb-6 text-steel text-sm md:text-base leading-relaxed border-t border-border pt-3 md:pt-4 mt-1 md:mt-2">
-            Absolutely. We understand that security gaps happen without warning. SQS Security responds quickly to urgent cover requests, providing SIA-licensed officers without complicated procurement delays.
-          </div>
-        </details>
-
-        <!-- FAQ Item 3 -->
-        <details class="group bg-white rounded-xl shadow-sm border border-border border-l-[6px] border-l-teal-500 hover:border-l-teal-600 hover:shadow-md transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
-          <summary class="flex items-center justify-between cursor-pointer p-4 md:p-6 font-display font-bold text-base md:text-lg text-navy">
-            <span class="group-hover:text-teal-600 transition-colors pr-4 leading-snug">What kind of reporting do you provide?</span>
-            <span class="transition group-open:rotate-180 bg-teal-50 text-teal-600 p-1.5 md:p-2 rounded-full shrink-0">
-              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-5 h-5 md:w-6 md:h-6"><path d="M6 9l6 6 6-6"></path></svg>
-            </span>
-          </summary>
-          <div class="px-4 md:px-6 pb-4 md:pb-6 text-steel text-sm md:text-base leading-relaxed border-t border-border pt-3 md:pt-4 mt-1 md:mt-2">
-            We provide clear, written reporting for every deployment. Shift reports, access logs, and incident records are delivered to clients after every assignment, so you never have to chase us for documentation.
-          </div>
-        </details>
-
-        <!-- FAQ Item 4 -->
-        <details class="group bg-white rounded-xl shadow-sm border border-border border-l-[6px] border-l-purple-500 hover:border-l-purple-600 hover:shadow-md transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
-          <summary class="flex items-center justify-between cursor-pointer p-4 md:p-6 font-display font-bold text-base md:text-lg text-navy">
-            <span class="group-hover:text-purple-600 transition-colors pr-4 leading-snug">Do you cover my specific area?</span>
-            <span class="transition group-open:rotate-180 bg-purple-50 text-purple-600 p-1.5 md:p-2 rounded-full shrink-0">
-              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-5 h-5 md:w-6 md:h-6"><path d="M6 9l6 6 6-6"></path></svg>
-            </span>
-          </summary>
-          <div class="px-4 md:px-6 pb-4 md:pb-6 text-steel text-sm md:text-base leading-relaxed border-t border-border pt-3 md:pt-4 mt-1 md:mt-2">
-            While our headquarters is based in Southampton, we provide comprehensive, UK-wide deployment. Whether you are in London, Manchester, Brighton, or Birmingham, we have local experts ready to secure your premises.
-          </div>
-        </details>
+        {faqs.map((faq: any, index: number) => {
+          const style = faqStyles[index % faqStyles.length];
+          return (
+            <details class={`group bg-white rounded-xl shadow-sm border border-border border-l-[6px] ${style.border} hover:shadow-md transition-all duration-300 [&_summary::-webkit-details-marker]:hidden`}>
+              <summary class="flex items-center justify-between cursor-pointer p-4 md:p-6 font-display font-bold text-base md:text-lg text-navy">
+                <span class={`${style.text} transition-colors pr-4 leading-snug`}>{faq.question}</span>
+                <span class={`transition group-open:rotate-180 ${style.arrowBg} p-1.5 md:p-2 rounded-full shrink-0`}>
+                  <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-5 h-5 md:w-6 md:h-6"><path d="M6 9l6 6 6-6"></path></svg>
+                </span>
+              </summary>
+              <div class="px-4 md:px-6 pb-4 md:pb-6 text-steel text-sm md:text-base leading-relaxed border-t border-border pt-3 md:pt-4 mt-1 md:mt-2">
+                {faq.answer}
+              </div>
+            </details>
+          );
+        })}
       </div>
     </div>
   </section>

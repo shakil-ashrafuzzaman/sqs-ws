@@ -182,7 +182,14 @@ export async function getStaticPaths() {
     }
   ];
 
-  const allPosts = [...(blogPosts || []), ...(caseStudies || []), ...fallbackBlogs];
+  const fetchedSlugs = new Set([
+    ...(blogPosts || []).map((p: any) => p.slug),
+    ...(caseStudies || []).map((cs: any) => cs.slug)
+  ].filter(Boolean));
+
+  const uniqueFallbackBlogs = fallbackBlogs.filter(b => !fetchedSlugs.has(b.slug));
+
+  const allPosts = [...(blogPosts || []), ...(caseStudies || []), ...uniqueFallbackBlogs];
 
   return allPosts.map((post: any) => {
     // Grab some related posts (filtering out the current one)

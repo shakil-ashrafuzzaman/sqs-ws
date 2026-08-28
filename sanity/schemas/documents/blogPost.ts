@@ -98,8 +98,8 @@ export const blogPost = defineType({
       title: 'Categories',
       type: 'array',
       group: 'meta',
-      of: [{ type: 'reference', to: [{ type: 'industry' }] }],
-      description: 'Tag this post with relevant industries (e.g. Corporate Security, Retail).',
+      of: [{ type: 'reference', to: [{ type: 'category' }] }],
+      description: 'Tag this post with relevant blog categories (e.g. Security Advice, Security Solutions).',
       validation: (Rule) => Rule.max(4).warning('Limit to 4 categories per post.'),
     }),
     defineField({

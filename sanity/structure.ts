@@ -16,6 +16,7 @@ import {
   BadgeCheck,
   Phone,
   Settings,
+  Tag,
 } from 'lucide-react'
 
 export const structure: StructureResolver = (S) =>
@@ -71,6 +72,11 @@ export const structure: StructureResolver = (S) =>
         .title('Case Studies')
         .icon(Award)
         .child(S.documentTypeList('caseStudy').title('All Case Studies')),
+
+      S.listItem()
+        .title('Categories')
+        .icon(Tag)
+        .child(S.documentTypeList('category').title('Blog Categories')),
 
       S.listItem()
         .title('Testimonials')
