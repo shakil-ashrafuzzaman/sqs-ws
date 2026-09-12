@@ -66,7 +66,29 @@ export const structure: StructureResolver = (S) =>
       S.listItem()
         .title('Blog Posts')
         .icon(FileText)
-        .child(S.documentTypeList('blogPost').title('All Blog Posts')),
+        .child(
+          S.list()
+            .title('Blog Posts')
+            .items([
+              S.listItem()
+                .title('All Blog Posts')
+                .icon(FileText)
+                .child(S.documentTypeList('blogPost').title('All Blog Posts')),
+              S.listItem()
+                .title('Blog Posts by Category')
+                .icon(Tag)
+                .child(
+                  S.documentTypeList('category')
+                    .title('Select Category')
+                    .child((categoryId) =>
+                      S.documentList()
+                        .title('Blog Posts')
+                        .filter('_type == "blogPost" && $categoryId in categories[]._ref')
+                        .params({ categoryId })
+                    )
+                ),
+            ])
+        ),
 
       S.listItem()
         .title('Case Studies')

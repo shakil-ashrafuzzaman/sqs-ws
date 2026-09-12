@@ -14,7 +14,7 @@ function getEnvVar(key: string, defaultValue: string = ''): string {
 export const sanityClient = createClient({
   projectId: getEnvVar('PUBLIC_SANITY_PROJECT_ID', 'k4vpp9e5'),
   dataset: getEnvVar('PUBLIC_SANITY_DATASET', 'production'),
-  useCdn: getEnvVar('SANITY_USE_CDN', 'true') === 'true',
+  useCdn: getEnvVar('SANITY_USE_CDN', 'false') === 'true',
   apiVersion: '2024-01-01',
 });
 

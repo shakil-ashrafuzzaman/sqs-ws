@@ -126,14 +126,15 @@ export const blogPost = defineType({
       author: 'author.name',
       date: 'publishedAt',
       media: 'featuredImage',
+      category: 'categories.0.title',
     },
-    prepare({ title, author, date, media }) {
+    prepare({ title, author, date, media, category }) {
       const formattedDate = date
         ? format(new Date(date), 'dd MMM yyyy')
         : 'Unpublished'
       return {
         title,
-        subtitle: `By ${author ?? 'Unknown'} · ${formattedDate}`,
+        subtitle: `${category ? `[${category}] ` : ''}By ${author ?? 'SQS Security'} · ${formattedDate}`,
         media,
       }
     },

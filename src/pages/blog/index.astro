@@ -1,4 +1,6 @@
 ---
+export const prerender = false;
+
 import PageLayout from '@layouts/PageLayout.astro';
 import Card from '@components/common/Card.astro';
 import Badge from '@components/common/Badge.astro';
@@ -10,7 +12,7 @@ const query = `*[_type == "blogPost"] | order(publishedAt desc) {
   "slug": slug.current,
   "type": _type,
   excerpt,
-  "category": categories[0]->title,
+  "category": coalesce(categories[0]->title, "Security Advice"),
   publishedAt,
   featuredImage,
   author->{name}
