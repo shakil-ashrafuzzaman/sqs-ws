@@ -44,7 +44,7 @@ const [siteSettings, fetchedServices, contactInfo, fetchedCertifications, fetche
     quote,
     rating
   }`).catch(() => []),
-  sanityClient.fetch(`*[_type == "faq" && featured == true] | order(order asc) {
+  sanityClient.fetch(`*[_type == "faq" && featured != false] | order(order asc) {
     question,
     answer,
     category
@@ -77,42 +77,42 @@ const fallbackServices = [
   {
     title: 'Security Guarding',
     slug: 'security-guarding',
-    imageFallback: '/images/security-guarding.png',
+    imageFallback: '/images/security-guarding.webp',
   },
   {
     title: 'Waking Watch',
     slug: 'waking-watch',
-    imageFallback: '/images/waking-watch-patrol.png',
+    imageFallback: '/images/waking-watch-patrol.webp',
   },
   {
     title: 'Construction Security',
     slug: 'construction-security',
-    imageFallback: '/images/construction-security.png',
+    imageFallback: '/images/construction-security.webp',
   },
   {
     title: 'Dog Handler / K9',
     slug: 'dog-handler-k9',
-    imageFallback: '/images/dog-handler.png',
+    imageFallback: '/images/dog-handler.webp',
   },
   {
     title: 'Warehouse Security',
     slug: 'warehouse-security',
-    imageFallback: '/images/warehouse-security.png',
+    imageFallback: '/images/warehouse-security.webp',
   },
   {
     title: 'Office Security',
     slug: 'office-security',
-    imageFallback: '/images/office-security.png',
+    imageFallback: '/images/office-security.webp',
   },
   {
     title: 'Void Property',
     slug: 'void-property',
-    imageFallback: '/images/void-property.png?v=2',
+    imageFallback: '/images/void-property.webp',
   },
   {
     title: 'Emergency Cover',
     slug: 'emergency-cover',
-    imageFallback: '/images/emergency-cover.png',
+    imageFallback: '/images/emergency-cover.webp',
   }
 ];
 
@@ -134,14 +134,14 @@ const uniqueFallbackServices = fallbackServices.filter(s => !fetchedSlugs.has(s.
 const rawServices = [...(fetchedServices || []), ...uniqueFallbackServices];
 
 const fallbackImagesBySlug: Record<string, string> = {
-  'security-guarding': '/images/security-guarding.png',
-  'waking-watch': '/images/waking-watch-patrol.png',
-  'construction-security': '/images/construction-security.png',
-  'dog-handler-k9': '/images/dog-handler.png',
-  'warehouse-security': '/images/warehouse-security.png',
-  'office-security': '/images/office-security.png',
-  'void-property': '/images/void-property.png?v=2',
-  'emergency-cover': '/images/emergency-cover.png'
+  'security-guarding': '/images/security-guarding.webp',
+  'waking-watch': '/images/waking-watch-patrol.webp',
+  'construction-security': '/images/construction-security.webp',
+  'dog-handler-k9': '/images/dog-handler.webp',
+  'warehouse-security': '/images/warehouse-security.webp',
+  'office-security': '/images/office-security.webp',
+  'void-property': '/images/void-property.webp',
+  'emergency-cover': '/images/emergency-cover.webp'
 };
 
 const services = rawServices.map((service: any) => {
@@ -295,14 +295,14 @@ const pageSchema = [organizationSchema];
     ) : (
       <div class="absolute inset-0 w-full h-full z-0 overflow-hidden bg-navy">
         {[
-          { img: '/images/security-guarding.png', name: 'Security Guarding', pos: 'object-center' },
-          { img: '/images/emergency-cover.png', name: 'Emergency Cover', pos: 'object-center' },
-          { img: '/images/office-security.png', name: 'Office Security', pos: 'object-[center_25%] md:object-[center_30%]' },
-          { img: '/images/construction-security.png', name: 'Construction Security', pos: 'object-center' },
-          { img: '/images/void-property.png?v=2', name: 'Void Property Security', pos: 'object-center' },
-          { img: '/images/dog-handler.png', name: 'K9 Dog Handler', pos: 'object-[30%_60%] md:object-[25%_60%]' },
-          { img: '/images/warehouse-security.png', name: 'Warehouse Security', pos: 'object-center' },
-          { img: '/images/waking-watch-patrol.png', name: 'Waking Watch', pos: 'object-center' }
+          { img: '/images/security-guarding.webp', name: 'Security Guarding', pos: 'object-center' },
+          { img: '/images/emergency-cover.webp', name: 'Emergency Cover', pos: 'object-center' },
+          { img: '/images/office-security.webp', name: 'Office Security', pos: 'object-[center_25%] md:object-[center_30%]' },
+          { img: '/images/construction-security.webp', name: 'Construction Security', pos: 'object-center' },
+          { img: '/images/void-property.webp', name: 'Void Property Security', pos: 'object-center' },
+          { img: '/images/dog-handler.webp', name: 'K9 Dog Handler', pos: 'object-[30%_60%] md:object-[25%_60%]' },
+          { img: '/images/warehouse-security.webp', name: 'Warehouse Security', pos: 'object-center' },
+          { img: '/images/waking-watch-patrol.webp', name: 'Waking Watch', pos: 'object-center' }
         ].map((item, index) => (
           <div 
             class="absolute inset-0 w-full h-full opacity-0 hero-slider-wrapper"

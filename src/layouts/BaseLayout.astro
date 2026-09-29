@@ -38,6 +38,7 @@ const formattedTitle = title.includes(siteName)
     <!-- Base Meta Tags -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preload" as="image" href="/sqs-header-logo.webp" type="image/webp" fetchpriority="high" />
     <link rel="icon" type="image/png" href="/favicon.png?v=6" />
     <meta name="generator" content={Astro.generator} />
 
@@ -84,6 +85,7 @@ const formattedTitle = title.includes(siteName)
     <!-- Preconnecting to Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" />
 
     <!-- Google Analytics (GA4) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-7EY8YBV77T"></script>

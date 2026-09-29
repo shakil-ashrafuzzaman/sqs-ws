@@ -59,7 +59,7 @@ export default defineConfig({
     sanity({
       projectId: process.env.PUBLIC_SANITY_PROJECT_ID || 'k4vpp9e5',
       dataset: process.env.PUBLIC_SANITY_DATASET || 'production',
-      useCdn: false,
+      useCdn: true,
       studioBasePath: '/admin',
     }),
     // Auto-generates /sitemap-index.xml and /sitemap-0.xml at build time

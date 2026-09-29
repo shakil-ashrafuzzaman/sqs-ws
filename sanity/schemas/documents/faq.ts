@@ -61,7 +61,7 @@ export const faq = defineType({
       title: 'Show on Homepage',
       type: 'boolean',
       description: 'Include this FAQ in the homepage FAQ section.',
-      initialValue: false,
+      initialValue: true,
     }),
   ],
 
