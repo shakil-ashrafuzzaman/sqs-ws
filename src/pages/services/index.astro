@@ -78,9 +78,10 @@ const fallbackServices = [
   }
 ];
 
-const fetchedSlugs = new Set((fetchedServices || []).map((s: any) => s.slug));
-const uniqueFallbackServices = fallbackServices.filter(s => !fetchedSlugs.has(s.slug));
-const services = [...(fetchedServices || []), ...uniqueFallbackServices];
+// Use fetched services from Sanity CMS when available, avoiding duplicates from fallback list
+const services = (fetchedServices && fetchedServices.length > 0)
+  ? fetchedServices
+  : fallbackServices;
 ---
 
 <PageLayout 

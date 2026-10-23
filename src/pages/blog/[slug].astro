@@ -297,8 +297,13 @@ const articleSchema = {
       <article class="prose prose-lg prose-slate prose-headings:font-display prose-headings:font-bold prose-headings:text-navy prose-a:text-blue hover:prose-a:text-navy prose-img:rounded-xl mx-auto">
         {(post.featuredImageFallback || post.featuredImage?.asset) && (
           <img 
-            src={post.featuredImage?.asset ? urlFor(post.featuredImage).width(1200).height(600).url() : post.featuredImageFallback} 
+            src={post.featuredImage?.asset 
+              ? urlFor(post.featuredImage).width(1200).height(600).quality(85).auto('format').fit('crop').url() 
+              : post.featuredImageFallback} 
             alt={post.title} 
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
             class="w-full h-auto rounded-xl mb-8 shadow-md"
           />
         )}
