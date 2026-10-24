@@ -1,4 +1,4 @@
-name: Deploy Astro to cPanel
+name: Build and Verify Astro
 
 on:
   # Triggers when you push code to the main branch
@@ -12,7 +12,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  build:
+    name: Build & Test
     runs-on: ubuntu-latest
     
     steps:
@@ -35,16 +36,3 @@ jobs:
           PUBLIC_SANITY_DATASET: ${{ secrets.PUBLIC_SANITY_DATASET }}
           PUBLIC_WEB3FORMS_KEY: ${{ secrets.PUBLIC_WEB3FORMS_KEY }}
 
-      - name: 📂 Sync files via FTP to cPanel
-        if: env.FTP_SERVER != ''
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        env:
-          FTP_SERVER: ${{ secrets.FTP_SERVER }}
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          # Path to the build output folder
-          local-dir: ./dist/
-          # (Optional) specify your cPanel folder if it's not the root of your FTP user
-          # server-dir: ./public_html/
